@@ -13,19 +13,27 @@ class Player(pygame.sprite.Sprite):
         self.hitbox.height -= 13
 
         self.import_player_assets()
+
         self.status = 'down'
         self.frame_index = 0
+
         self.animation_move_speed = 0.15
         self.animation_idle_speed = 0.05
         self.animation_attack_speed = 0.1
 
         self.direction = [0, 0]
-        self.speed = 4
+
         self.attacking = False
         self.attack_cooldown = 500
         self.attack_time = None
 
         self.obstacle_sprites = obstacle_sprites
+
+        self.stats = {'health': 100, 'energy': 60, 'attack': 10, 'speed': 4}
+        self.health = self.stats['health']
+        self.energy = self.stats['energy']
+        self.exp = 123
+        self.speed = self.stats['speed']
 
     def import_player_assets(self):
         self.pathes = {
@@ -67,7 +75,6 @@ class Player(pygame.sprite.Sprite):
             for p in self.pathes[s]:
                 self.animations[s].append(pygame.image.load(fixpath(f'assets/images/red-wizard/{p}.png')))
 
-
     def input(self):
         if self.attacking:
             return
@@ -99,12 +106,12 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE]:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            print('attak')
+            # print('attak')
 
         if keys[pygame.K_1]:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            print('majik')
+            # print('majik')
 
     def get_status(self):
         if self.direction[0] == 0 and self.direction[1] == 0:
@@ -125,7 +132,7 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, speed):
         if self.direction[0] and self.direction[1]:
-            speed = 5
+            speed = 3
         self.hitbox.centerx += self.direction[0] * speed
         self.collision('h')
         self.hitbox.centery += self.direction[1] * speed
@@ -187,4 +194,3 @@ class Player(pygame.sprite.Sprite):
         self.get_status()
         self.animate()
         self.move(self.speed)
-        debug(self.direction)

@@ -25,7 +25,7 @@ class Game:
         # general setup
         pygame.init()  # инициализируем pygame
         self.screen = pygame.display.set_mode((WIDTH, HEIGTH))  # создаём экран
-        pygame.display.set_caption('Dungeon RPG')  # задаём заголовок
+        pygame.display.set_caption('Reincarnation of the strongest hero')  # задаём заголовок
 
         # -------------------------------------
         # Вот тебе задание: выбери и отобрази иконку на окне игры

@@ -4,6 +4,30 @@ FPS = 60
 # TILESIZE = 64
 TILESIZE = 32
 
+# ui
+BAR_HEIGHT = 20
+HEALTH_BAR_WIDTH = 200
+ENERGY_BAR_WIDTH = 140
+ITEM_BOX_SIZE = 80
+UI_FONT = 'assets/fonts/joystix.ttf'
+UI_FONT_SIZE = 18
+
+# general colors
+WATER_COLOR = '#71ddee'
+UI_BG_COLOR = '#222222'
+UI_BORDER_COLOR = '#111111'
+TEXT_COLOR = '#EEEEEE'
+
+# ui colors
+HEALTH_COLOR = 'red'
+ENERGY_COLOR = 'blue'
+UI_BORDER_COLOR_ACTIVE = 'gold'
+
+monster_data = {
+    'slime': {'health': 50, 'exp': 20, 'damage': 10, 'attack_type': None, 'attack_sound': None, 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
+    'slime2': {'health': 50, 'exp': 20, 'damage': 10, 'attack_type': None, 'attack_sound': None, 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
+}
+
 MAIN_TILE_IMAGES = {}
 
 ID = 0

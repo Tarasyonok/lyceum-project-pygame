@@ -4,6 +4,7 @@ from modules.tile import Tile
 from modules.player import Player
 from modules.debug import debug
 from modules.support import *
+from modules.ui import UI
 
 
 class Level:
@@ -18,6 +19,9 @@ class Level:
 
         # sprite setup
         self.create_map()
+
+        # user interface
+        self.ui = UI()
 
     def create_map(self):
         layouts = {
@@ -53,6 +57,7 @@ class Level:
         # update and draw the game
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
+        self.ui.display(self.player)
 
 
 class CameraGroup(pygame.sprite.Group):
