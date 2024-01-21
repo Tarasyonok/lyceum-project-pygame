@@ -23,6 +23,3 @@ for y in range(29):
         DECORATIVE_TILE_IMAGES[ID] = (x * TILESIZE, y * TILESIZE)
         # TILE_IMAGES[ID] = (x, y)
         ID += 1
-
-
-print(DECORATIVE_TILE_IMAGES[91])

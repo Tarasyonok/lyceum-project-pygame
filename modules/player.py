@@ -1,6 +1,7 @@
 import pygame
 from modules.settings import *
 from modules.support import *
+from modules.debug import debug
 
 class Player(pygame.sprite.Sprite):
     def __init__(self,pos,groups, obstacle_sprites):
@@ -123,8 +124,8 @@ class Player(pygame.sprite.Sprite):
 
 
     def move(self, speed):
-        # if self.direction[0] != 0 and self.direction[1] != 0:
-            # speed *= 0.7
+        if self.direction[0] and self.direction[1]:
+            speed = 3
         self.hitbox.centerx += self.direction[0] * speed
         self.collision('h')
         self.hitbox.centery += self.direction[1] * speed
@@ -186,3 +187,4 @@ class Player(pygame.sprite.Sprite):
         self.get_status()
         self.animate()
         self.move(self.speed)
+        debug(self.direction)

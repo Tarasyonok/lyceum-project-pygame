@@ -16,6 +16,7 @@ https://proproprogs.ru/modules/chto-takoe-pygame-karkas-prilozheniya-fps
 import pygame, sys
 from modules.settings import *
 from modules.level import Level
+from modules.debug import debug
 
 
 class Game:
