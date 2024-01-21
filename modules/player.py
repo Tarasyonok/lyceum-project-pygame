@@ -125,7 +125,7 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, speed):
         if self.direction[0] and self.direction[1]:
-            speed = 3
+            speed = 5
         self.hitbox.centerx += self.direction[0] * speed
         self.collision('h')
         self.hitbox.centery += self.direction[1] * speed
