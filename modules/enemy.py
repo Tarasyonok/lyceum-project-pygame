@@ -24,7 +24,7 @@ class Enemy(Entity):
 
         self.animation_move_speed = 0.15
         self.animation_idle_speed = 0.05
-        self.animation_attack_speed = 0.5
+        self.animation_attack_speed = 1
 
         # stats
         self.monster_name = monster_name
@@ -95,7 +95,7 @@ class Enemy(Entity):
             self.frame_index = 0
 
         self.image = animation[int(self.frame_index)]
-        self.rect = self.image.get_rect(center = self.hitbox.center)
+        self.rect = self.image.get_rect(center=self.hitbox.center)
 
     def cooldown(self):
         if not self.can_attack:
