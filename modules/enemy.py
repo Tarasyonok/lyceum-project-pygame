@@ -42,6 +42,7 @@ class Enemy(Entity):
         self.can_attack = True
         self.attack_time = None
         self.attack_cooldown = 400
+        self.stop_flag = False
 
     def import_graphics(self,name):
         print(fixpath(f'assets/images/enemies/{name}'))
@@ -71,8 +72,11 @@ class Enemy(Entity):
             if self.status != 'attack':
                 self.frame_index = 0
             self.status = 'attack'
+            self.stop_flag = True
         elif distance <= self.notice_radius:
             self.status = 'move'
+            self.stop_flag = False
+
         else:
             self.status = 'idle'
 
@@ -104,7 +108,8 @@ class Enemy(Entity):
                 self.can_attack = True
 
     def update(self):
-        self.move(self.speed)
+        if not self.stop_flag:
+            self.move(self.speed)
         self.animate()
         self.cooldown()
 
