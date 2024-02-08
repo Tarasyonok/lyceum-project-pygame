@@ -24,8 +24,8 @@ ENERGY_COLOR = 'blue'
 UI_BORDER_COLOR_ACTIVE = 'gold'
 
 monster_data = {
-    'slime': {'health': 50, 'exp': 20, 'damage': 10, 'attack_type': None, 'attack_sound': None, 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
-    'slime2': {'health': 50, 'exp': 20, 'damage': 10, 'attack_type': None, 'attack_sound': None, 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
+    'slime': {'health': 50, 'exp': 20, 'damage': 10, 'attack_type': None, 'attack_sound': None, 'speed': 1, 'resistance': 3, 'attack_radius': 100, 'notice_radius': 120},
+    'cobra': {'health': 50, 'exp': 20, 'damage': 10, 'attack_type': None, 'attack_sound': None, 'speed': 1, 'resistance': 3, 'attack_radius': 100, 'notice_radius': 120},
 }
 
 MAIN_TILE_IMAGES = {}

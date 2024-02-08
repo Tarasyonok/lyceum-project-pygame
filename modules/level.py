@@ -5,6 +5,7 @@ from modules.player import Player
 from modules.debug import debug
 from modules.support import *
 from modules.ui import UI
+from modules.enemy import Enemy
 
 
 class Level:
@@ -29,6 +30,8 @@ class Level:
             'detail': import_csv_layout(fixpath('levels/level0/map_Details.csv')),
             'wall': import_csv_layout(fixpath('levels/level0/map_Walls.csv')),
             'object': import_csv_layout(fixpath('levels/level0/map_Objects.csv')),
+            'entities': import_csv_layout(fixpath('levels/level0/map_Entities.csv')),
+            
         }
 
         for style, layout in layouts.items():
@@ -46,17 +49,30 @@ class Level:
                         #     Tile((x, y), [self.visible_sprites], 'detail', crop_tile(style, col))
                         if style == 'object':
                             Tile((x, y), [self.visible_sprites], 'object', crop_tile(style, col))
+                        if style == 'entities':
+                            if col == 0:
+                                self.player = Player((400, 300), [self.visible_sprites], self.obstacle_sprites)
+                            elif col == 1:
+                                Enemy('slime', (x,y), [self.visible_sprites], self.obstacle_sprites)
+                        #     elif col == 2:
+                        #         Enemy('cobra', (x,y), [self.visible_sprites])
+                            else:
+                                Enemy('cobra', (x,y), [self.visible_sprites],self.obstacle_sprites)
+                            
+
+
         # 		if col == 'b':
         # 			Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
         # 		if col == 'p':
         # 			self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites)
-        self.player = Player((400, 300), [self.visible_sprites], self.obstacle_sprites)
-        pygame.display.flip()
+        
 
     def run(self):
         # update and draw the game
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
+        self.visible_sprites.enemy_update(self.player)
+
         self.ui.display(self.player)
 
 
@@ -82,3 +98,9 @@ class CameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
             offset_pos = [sprite.rect.left - self.offset[0], sprite.rect.top - self.offset[1]]
             self.display_surface.blit(sprite.image, offset_pos)
+
+
+    def enemy_update(self, player):
+        enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
+        for spite in enemy_sprites:
+            spite.enemy_update(player)

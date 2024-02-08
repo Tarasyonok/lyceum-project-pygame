@@ -2,8 +2,9 @@ import pygame
 from modules.settings import *
 from modules.support import *
 from modules.debug import debug
+from modules.entity import Entity
 
-class Player(pygame.sprite.Sprite):
+class Player(Entity):
     def __init__(self,pos,groups, obstacle_sprites):
         super().__init__(groups)
         self.image = pygame.image.load(fixpath("assets/images/red-wizard/downidle1.png"))
@@ -15,13 +16,12 @@ class Player(pygame.sprite.Sprite):
         self.import_player_assets()
 
         self.status = 'down'
-        self.frame_index = 0
 
         self.animation_move_speed = 0.15
         self.animation_idle_speed = 0.05
         self.animation_attack_speed = 0.1
 
-        self.direction = [0, 0]
+        self.direction = pygame.math.Vector2()
 
         self.attacking = False
         self.attack_cooldown = 500
@@ -119,7 +119,7 @@ class Player(pygame.sprite.Sprite):
                 self.status = self.status + '_idle'
 
         if self.attacking:
-            self.direction = [0, 0]
+            self.direction = pygame.math.Vector2()
             if 'attack' not in self.status:
                 if 'idle' in self.status:
                     self.status = self.status.replace('_idle', '_attack')
@@ -130,32 +130,32 @@ class Player(pygame.sprite.Sprite):
                 self.status = self.status.replace('_attack', '')
 
 
-    def move(self, speed):
-        if self.direction[0] and self.direction[1]:
-            speed = 3
-        self.hitbox.centerx += self.direction[0] * speed
-        self.collision('h')
-        self.hitbox.centery += self.direction[1] * speed
-        self.collision('v')
-        self.rect.center = self.hitbox.center
+    # def move(self, speed):
+    #     if self.direction[0] and self.direction[1]:
+    #         speed = 3
+    #     self.hitbox.centerx += self.direction[0] * speed
+    #     self.collision('h')
+    #     self.hitbox.centery += self.direction[1] * speed
+    #     self.collision('v')
+    #     self.rect.center = self.hitbox.center
 
 
-    def collision(self, direction):
-        if direction == 'h':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction[0] > 0:
-                        self.hitbox.right = sprite.hitbox.left
-                    if self.direction[0] < 0:
-                        self.hitbox.left = sprite.hitbox.right
+    # def collision(self, direction):
+    #     if direction == 'h':
+    #         for sprite in self.obstacle_sprites:
+    #             if sprite.hitbox.colliderect(self.hitbox):
+    #                 if self.direction[0] > 0:
+    #                     self.hitbox.right = sprite.hitbox.left
+    #                 if self.direction[0] < 0:
+    #                     self.hitbox.left = sprite.hitbox.right
 
-        if direction == 'v':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox):
-                    if self.direction[1] > 0:
-                        self.hitbox.bottom = sprite.hitbox.top
-                    if self.direction[1] < 0:
-                        self.hitbox.top = sprite.hitbox.bottom
+    #     if direction == 'v':
+    #         for sprite in self.obstacle_sprites:
+    #             if sprite.hitbox.colliderect(self.hitbox):
+    #                 if self.direction[1] > 0:
+    #                     self.hitbox.bottom = sprite.hitbox.top
+    #                 if self.direction[1] < 0:
+    #                     self.hitbox.top = sprite.hitbox.bottom
 
     def cooldowns(self):
         curr_time = pygame.time.get_ticks()

@@ -4,7 +4,6 @@ class Entity(pygame.sprite.Sprite):
 	def __init__(self,groups):
 		super().__init__(groups)
 		self.frame_index = 0
-		self.animation_speed = 0.15
 		self.direction = pygame.math.Vector2()
 
 	def move(self,speed):
@@ -18,6 +17,8 @@ class Entity(pygame.sprite.Sprite):
 		self.rect.center = self.hitbox.center
 
 	def collision(self,direction):
+		if self.__class__.__name__ == 'Enemy':
+			return
 		if direction == 'horizontal':
 			for sprite in self.obstacle_sprites:
 				if sprite.hitbox.colliderect(self.hitbox):

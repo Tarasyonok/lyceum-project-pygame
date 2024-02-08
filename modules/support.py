@@ -6,8 +6,7 @@ crop_tile - выбирает нужный тайл по индексу
 '''
 
 from csv import reader
-# from os import walk
-from os import path
+from os import path, walk
 from modules.settings import *
 import pygame
 
@@ -41,3 +40,16 @@ def crop_tile(style, ID):
     tile_surf.blit(tiles, (0, 0),
                    (tile_posx, tile_posy, TILESIZE, TILESIZE))
     return tile_surf
+
+# def import_enemy_images(monster_name):
+#     print(monster_name)
+#     d = {'idle': [], 'move': [], 'attack': [], 'hit': [], 'die': []}
+#     for p in next(walk(fixpath(f'assets/images/enemies/{monster_name}')))[2]:
+#         print(p)
+#         for key in d:
+#             if key in p:
+#                 d[key].append(pygame.image.load(fixpath(f'assets/images/enemies/{monster_name}/{p}')))
+#                 break
+#     return d
+
+# print(import_enemy_images('slime'))
