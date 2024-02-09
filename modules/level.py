@@ -2,6 +2,7 @@ import pygame
 from modules.settings import *
 from modules.tile import Tile
 from modules.player import Player
+from modules.attack import Attack
 from modules.debug import debug
 from modules.support import *
 from modules.ui import UI
@@ -18,6 +19,10 @@ class Level:
         self.visible_sprites = CameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
 
+        self.current_attack = None
+        self.attack_sprites = pygame.sprite.Group()
+        self.attackable_sprites = pygame.sprite.Group()
+
         # sprite setup
         self.create_map()
 
@@ -31,7 +36,6 @@ class Level:
             'wall': import_csv_layout(fixpath('levels/level0/map_Walls.csv')),
             'object': import_csv_layout(fixpath('levels/level0/map_Objects.csv')),
             'entities': import_csv_layout(fixpath('levels/level0/map_Entities.csv')),
-            
         }
 
         for style, layout in layouts.items():
@@ -51,13 +55,21 @@ class Level:
                             Tile((x, y), [self.visible_sprites], 'object', crop_tile(style, col))
                         if style == 'entities':
                             if col == 0:
-                                self.player = Player((400, 300), [self.visible_sprites], self.obstacle_sprites)
-                            elif col == 1:
-                                Enemy('slime', (x,y), [self.visible_sprites], self.obstacle_sprites)
-                        #     elif col == 2:
-                        #         Enemy('cobra', (x,y), [self.visible_sprites])
+                                self.player = Player(
+                                    (400, 300),
+                                    [self.visible_sprites],
+                                    self.obstacle_sprites,
+                                    self.create_attack
+                                )
                             else:
-                                Enemy('cobra', (x,y), [self.visible_sprites],self.obstacle_sprites)
+                                if col == 1: monster_name = 'slime'
+                                elif col == 2: monster_name = 'cobra'
+                                # Enemy(
+                                #     monster_name,
+                                #     (x,y),
+                                #     [self.visible_sprites],
+                                #     self.obstacle_sprites
+                                # )
                             
 
 
@@ -66,6 +78,10 @@ class Level:
         # 		if col == 'p':
         # 			self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites)
         
+    def create_attack(self):
+        Attack(self.player, [self.visible_sprites])
+
+
 
     def run(self):
         # update and draw the game
