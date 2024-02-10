@@ -59,17 +59,18 @@ class Level:
                                     (400, 300),
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
-                                    self.create_attack
+                                    self.create_attack,
+                                    self.destroy_attack
                                 )
                             else:
                                 if col == 1: monster_name = 'slime'
                                 elif col == 2: monster_name = 'cobra'
-                                # Enemy(
-                                #     monster_name,
-                                #     (x,y),
-                                #     [self.visible_sprites],
-                                #     self.obstacle_sprites
-                                # )
+                                Enemy(
+                                    monster_name,
+                                    (x,y),
+                                    [self.visible_sprites, self.attackable_sprites],
+                                    self.obstacle_sprites
+                                )
                             
 
 
@@ -79,8 +80,16 @@ class Level:
         # 			self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites)
         
     def create_attack(self):
-        Attack(self.player, [self.visible_sprites])
+        self.current_attack = Attack(self.player, [self.visible_sprites, self.attack_sprites])
 
+    def destroy_attack(self):
+        if self.current_attack:
+            self.current_attack.kill()
+        self.current_attack = None
+
+    def player_attack_logic(self):
+        if self.attack_sprites:
+            pass
 
 
     def run(self):

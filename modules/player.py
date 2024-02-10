@@ -5,7 +5,7 @@ from modules.debug import debug
 from modules.entity import Entity
 
 class Player(Entity):
-    def __init__(self,pos,groups, obstacle_sprites, create_attack):
+    def __init__(self,pos,groups, obstacle_sprites, create_attack, destroy_attack):
         super().__init__(groups)
         self.image = pygame.image.load(fixpath("assets/images/red-wizard/downidle1.png"))
         self.rect = self.image.get_rect(topleft = pos)
@@ -37,6 +37,7 @@ class Player(Entity):
         self.speed = self.stats['speed']
 
         self.create_attack = create_attack
+        self.destroy_attack = destroy_attack
 
     def import_player_assets(self):
         self.pathes = {
@@ -170,6 +171,7 @@ class Player(Entity):
         if self.attacking:
             if curr_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
+                self.destroy_attack()
 
     def animate(self):
         animation = self.animations[self.status]
