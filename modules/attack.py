@@ -29,3 +29,6 @@ class Attack(pygame.sprite.Sprite):
         elif dir_x < 0 and dir_y > 0:
             self.image = pygame.Surface((player.rect.width, player.rect.width))
             self.rect = self.image.get_rect(right=player.hitbox.center[0], top=player.hitbox.center[1])
+
+        self.image = self.image.convert_alpha()
+        self.image.fill((0, 0, 0, 0))
