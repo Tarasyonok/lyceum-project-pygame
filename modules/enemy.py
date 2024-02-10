@@ -83,11 +83,15 @@ class Enemy(Entity):
     def actions(self,player):
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks()
-            print('attack')
         elif self.status == 'move':
             self.direction = self.get_player_distance_direction(player)[1]
         else:
             self.direction = pygame.math.Vector2()
+
+    def get_damage(self):
+        self.health -= 10
+        if self.health <= 0:
+            self.kill()
 
     def animate(self):
         animation = self.animations[self.status]

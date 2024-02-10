@@ -85,20 +85,20 @@ class Player(Entity):
         keys = pygame.key.get_pressed()
 
         part2 = ''
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             self.direction[0] = 1
             part2 = 'right'
-        elif keys[pygame.K_LEFT]:
+        elif keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.direction[0] = -1
             part2 = 'left'
         else:
             self.direction[0] = 0
 
         part1 = ''
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.direction[1] = 1
             part1 = 'down'
-        elif keys[pygame.K_UP]:
+        elif keys[pygame.K_UP] or keys[pygame.K_w]:
             self.direction[1] = -1
             part1 = 'up'
         else:
@@ -114,12 +114,13 @@ class Player(Entity):
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
             self.create_attack()
-            # print('attak')
+            # attack
 
         if keys[pygame.K_1]:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            # print('majik')
+            self.create_attack()
+            # magic
 
     def get_status(self):
         if self.direction[0] == 0 and self.direction[1] == 0:
@@ -137,33 +138,6 @@ class Player(Entity):
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack', '')
 
-
-    # def move(self, speed):
-    #     if self.direction[0] and self.direction[1]:
-    #         speed = 3
-    #     self.hitbox.centerx += self.direction[0] * speed
-    #     self.collision('h')
-    #     self.hitbox.centery += self.direction[1] * speed
-    #     self.collision('v')
-    #     self.rect.center = self.hitbox.center
-
-
-    # def collision(self, direction):
-    #     if direction == 'h':
-    #         for sprite in self.obstacle_sprites:
-    #             if sprite.hitbox.colliderect(self.hitbox):
-    #                 if self.direction[0] > 0:
-    #                     self.hitbox.right = sprite.hitbox.left
-    #                 if self.direction[0] < 0:
-    #                     self.hitbox.left = sprite.hitbox.right
-
-    #     if direction == 'v':
-    #         for sprite in self.obstacle_sprites:
-    #             if sprite.hitbox.colliderect(self.hitbox):
-    #                 if self.direction[1] > 0:
-    #                     self.hitbox.bottom = sprite.hitbox.top
-    #                 if self.direction[1] < 0:
-    #                     self.hitbox.top = sprite.hitbox.bottom
 
     def cooldowns(self):
         curr_time = pygame.time.get_ticks()
@@ -193,6 +167,8 @@ class Player(Entity):
 
         # self.the image
         self.image = animation[int(self.frame_index)]
+        if 'attack' in self.status and int(self.frame_index) == 3:
+            self.destroy_attack()
         self.rect = self.image.get_rect(center=self.hitbox.center)
 
 

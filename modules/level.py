@@ -81,6 +81,11 @@ class Level:
         
     def create_attack(self):
         self.current_attack = Attack(self.player, [self.visible_sprites, self.attack_sprites])
+        collision_sprites = pygame.sprite.spritecollide(self.current_attack,self.attackable_sprites,False)
+        if collision_sprites:
+            for target in collision_sprites:
+                target.get_damage()
+
 
     def destroy_attack(self):
         if self.current_attack:
