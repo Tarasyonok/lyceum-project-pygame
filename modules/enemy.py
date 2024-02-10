@@ -43,6 +43,7 @@ class Enemy(Entity):
         self.attack_time = None
         self.attack_cooldown = 400
         self.stop_flag = False
+        self.died = False
 
     def import_graphics(self,name):
         print(fixpath(f'assets/images/enemies/{name}'))
@@ -66,6 +67,9 @@ class Enemy(Entity):
         return (distance,direction)
 
     def get_status(self, player):
+        if self.status in ["hit", "die"]:
+            return
+
         distance = self.get_player_distance_direction(player)[0]
 
         if distance <= self.attack_radius and self.can_attack:
@@ -88,10 +92,12 @@ class Enemy(Entity):
         else:
             self.direction = pygame.math.Vector2()
 
-    def get_damage(self):
+    def get_damage(self,player):
         self.health -= 10
         if self.health <= 0:
-            self.kill()
+            self.status = "die"
+        else:
+            self.status = "hit"
 
     def animate(self):
         animation = self.animations[self.status]
@@ -102,6 +108,12 @@ class Enemy(Entity):
                 self.can_attack = False
             self.frame_index = 0
 
+        if self.status == "hit" and int(self.frame_index) == len(animation) - 1:
+            self.status = "move"
+        if self.status == "die" and int(self.frame_index) == len(animation) - 1:
+            self.died = True
+        if self.died:
+            self.frame_index = len(animation) - 1
         self.image = animation[int(self.frame_index)]
         if self.direction.x < 0:
             self.image = pygame.transform.flip(self.image, 1, 0)

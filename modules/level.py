@@ -84,7 +84,7 @@ class Level:
         collision_sprites = pygame.sprite.spritecollide(self.current_attack,self.attackable_sprites,False)
         if collision_sprites:
             for target in collision_sprites:
-                target.get_damage()
+                target.get_damage(self.player)
 
 
     def destroy_attack(self):
