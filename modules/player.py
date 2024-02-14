@@ -113,13 +113,13 @@ class Player(Entity):
         if keys[pygame.K_SPACE]:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            self.create_attack()
+            self.create_attack('sword')
             # attack
 
         if keys[pygame.K_1]:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            self.create_attack()
+            self.create_attack('magic')
             # magic
 
     def get_status(self):

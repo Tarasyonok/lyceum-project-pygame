@@ -1,8 +1,9 @@
 import pygame
 
 class Attack(pygame.sprite.Sprite):
-    def __init__(self, player, groups):
+    def __init__(self, player, groups, attack_type):
         super().__init__(groups)
+        self.attack_type = attack_type
         dir_x, dir_y = player.save_direction
 
         if dir_x > 0 and dir_y == 0:

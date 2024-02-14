@@ -45,6 +45,10 @@ class Enemy(Entity):
         self.stop_flag = False
         self.died = False
 
+        self.vulnerable = True
+        self.hit_time = None
+        self.vulnerability_duration = 300
+
     def import_graphics(self,name):
         print(fixpath(f'assets/images/enemies/{name}'))
         self.animations = {'idle': [], 'move': [], 'attack': [], 'hit': [], 'die': []}
@@ -92,12 +96,25 @@ class Enemy(Entity):
         else:
             self.direction = pygame.math.Vector2()
 
-    def get_damage(self,player):
-        self.health -= 10
+    def get_damage(self,player,attack_type):
+        if not self.vulnerable:
+            return
+        self.direction = self.get_player_distance_direction(player)[1]
+        if attack_type == 'sword':
+            self.health -= player.stats['attack']
+        else:
+            pass
+        print(self.health)
         if self.health <= 0:
             self.status = "die"
         else:
             self.status = "hit"
+            self.hit_time = pygame.time.get_ticks()
+        self.vulnerable = False
+
+    def hit_reaction(self):
+        if not self.vulnerable:
+            self.direction *= -self.resistance
 
     def animate(self):
         animation = self.animations[self.status]
@@ -112,20 +129,28 @@ class Enemy(Entity):
             self.status = "move"
         if self.status == "die" and int(self.frame_index) == len(animation) - 1:
             self.died = True
+            self.died_image = animation[int(self.frame_index)]
+            if self.direction.x < 0:
+                self.died_image = pygame.transform.flip(self.image, 1, 0)
         if self.died:
-            self.frame_index = len(animation) - 1
-        self.image = animation[int(self.frame_index)]
-        if self.direction.x < 0:
-            self.image = pygame.transform.flip(self.image, 1, 0)
+            self.image = self.died_image
+        else:
+            self.image = animation[int(self.frame_index)]
+            if self.direction.x < 0:
+                self.image = pygame.transform.flip(self.image, 1, 0)
         self.rect = self.image.get_rect(center=self.hitbox.center)
 
     def cooldown(self):
+        current_time = pygame.time.get_ticks()
         if not self.can_attack:
-            current_time = pygame.time.get_ticks()
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.can_attack = True
+        if not self.vulnerable:
+            if current_time - self.hit_time >= self.vulnerability_duration:
+                self.vulnerable = True
 
     def update(self):
+        self.hit_reaction()
         if not self.stop_flag:
             self.move(self.speed)
         self.animate()

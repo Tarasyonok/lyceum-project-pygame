@@ -79,12 +79,12 @@ class Level:
         # 		if col == 'p':
         # 			self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites)
         
-    def create_attack(self):
-        self.current_attack = Attack(self.player, [self.visible_sprites, self.attack_sprites])
+    def create_attack(self, attack_type):
+        self.current_attack = Attack(self.player, [self.visible_sprites, self.attack_sprites], attack_type)
         collision_sprites = pygame.sprite.spritecollide(self.current_attack,self.attackable_sprites,False)
         if collision_sprites:
             for target in collision_sprites:
-                target.get_damage(self.player)
+                target.get_damage(self.player, self.current_attack.attack_type)
 
 
     def destroy_attack(self):
@@ -93,8 +93,12 @@ class Level:
         self.current_attack = None
 
     def player_attack_logic(self):
-        if self.attack_sprites:
-            pass
+        if self.current_attack:
+            collision_sprites = pygame.sprite.spritecollide(self.current_attack, self.attackable_sprites,False)
+            if collision_sprites:
+                for target_sprite in collision_sprites:
+                    target_sprite.get_damage(self.player, 'sword')
+
 
 
     def run(self):
@@ -102,7 +106,7 @@ class Level:
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
         self.visible_sprites.enemy_update(self.player)
-
+        self.player_attack_logic()
         self.ui.display(self.player)
 
 
