@@ -31,11 +31,11 @@ class Level:
 
     def create_map(self):
         layouts = {
-            'stop': import_csv_layout(fixpath('levels/level0/map_FloorBlocks.csv')),
-            'detail': import_csv_layout(fixpath('levels/level0/map_Details.csv')),
-            'wall': import_csv_layout(fixpath('levels/level0/map_Walls.csv')),
-            'object': import_csv_layout(fixpath('levels/level0/map_Objects.csv')),
-            'entities': import_csv_layout(fixpath('levels/level0/map_Entities.csv')),
+            'stop': import_csv_layout(fixpath('levels/level1/map_Stop.csv')),
+            'detail': import_csv_layout(fixpath('levels/level1/map_Details.csv')),
+            'wall': import_csv_layout(fixpath('levels/level1/map_Walls.csv')),
+            'object': import_csv_layout(fixpath('levels/level1/map_Objects.csv')),
+            'entities': import_csv_layout(fixpath('levels/level1/map_Entities.csv')),
         }
 
         for style, layout in layouts.items():
@@ -46,7 +46,7 @@ class Level:
                         x = col_index * TILESIZE
                         y = row_index * TILESIZE
                         if style == 'stop':
-                            Tile((x, y), [self.obstacle_sprites], 'stop')
+                            self.create_stop_blocks(col, x, y)
                         if style == 'wall':
                             Tile((x, y), [self.visible_sprites], 'wall', crop_tile(style, col))
                         # if style == 'detail':
@@ -56,7 +56,7 @@ class Level:
                         if style == 'entities':
                             if col == 0:
                                 self.player = Player(
-                                    (400, 300),
+                                    (2000, 2000),
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
                                     self.create_attack,
@@ -99,6 +99,26 @@ class Level:
                 for target_sprite in collision_sprites:
                     target_sprite.get_damage(self.player, 'sword')
 
+    def create_stop_blocks(self, col, x, y):
+        # poses = []
+        if col == 0:
+            poses = [
+                [x, y],
+                [x + 16, y],
+                [x, y + 16],
+                [x + 16, y + 16]
+            ]
+        elif col == 1:
+            poses = []
+        elif col == 2:
+            poses = [
+                [x + 16, y],
+                [x, y + 16],
+            ]
+        for pos in poses:
+            t = Tile(pos, [self.obstacle_sprites, self.visible_sprites], 'stop', pygame.Surface((16, 16)))
+            t.image.fill('red')
+
 
 
     def run(self):
@@ -118,7 +138,7 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_height() // 2
         self.offset = [0, 0]
 
-        self.floor_surf = pygame.image.load(fixpath('levels/level0/Floor.png')).convert()
+        self.floor_surf = pygame.image.load(fixpath('levels/level3/Floor.png')).convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):
