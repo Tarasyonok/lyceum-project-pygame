@@ -100,22 +100,88 @@ class Level:
                     target_sprite.get_damage(self.player, 'sword')
 
     def create_stop_blocks(self, col, x, y):
-        # poses = []
+        positions = []
         if col == 0:
-            poses = [
+            positions = [
                 [x, y],
                 [x + 16, y],
                 [x, y + 16],
                 [x + 16, y + 16]
             ]
         elif col == 1:
-            poses = []
+            positions = []
         elif col == 2:
-            poses = [
+            positions = [
+                [x + 16, y],
+                [x, y + 16]
+            ]
+        elif col == 3:
+            positions = [
+                [x, y],
+                [x + 16, y + 16]
+            ]
+        elif col == 4:
+            positions = [
                 [x + 16, y],
                 [x, y + 16],
+                [x + 16, y + 16]
             ]
-        for pos in poses:
+        elif col == 5:
+            positions = [
+                [x, y],
+                [x, y + 16],
+                [x + 16, y + 16]
+            ]
+        elif col == 6:
+            positions = [
+                [x, y],
+                [x + 16, y]
+                [x, y + 16],
+            ]
+        elif col == 7:
+            positions = [
+                [x, y],
+                [x + 16, y],
+                [x + 16, y + 16]
+            ]
+        elif col == 8:
+            positions = [
+                [x, y]
+            ]
+        elif col == 9:
+            positions = [
+                [x + 16, y]
+            ]
+        elif col == 10:
+            positions = [
+                [x, y]
+            ]
+        elif col == 11:
+            positions = [
+                [x, y + 16]
+            ]
+        elif col == 12:
+            positions = [
+                [x, y],
+                [x + 16, y]
+            ]
+        elif col == 13:
+            positions = [
+                [x, y + 16],
+                [x + 16, y + 16]
+            ]
+        elif col == 14:
+            positions = [
+                [x, y],
+                [x, y + 16]
+            ]
+        elif col == 15:
+            positions = [
+                [x + 16, y],
+                [x + 16, y + 16]
+            ]
+
+        for pos in positions:
             t = Tile(pos, [self.obstacle_sprites, self.visible_sprites], 'stop', pygame.Surface((16, 16)))
             t.image.fill('red')
 
