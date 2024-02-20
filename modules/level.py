@@ -135,7 +135,7 @@ class Level:
         elif col == 6:
             positions = [
                 [x, y],
-                [x + 16, y]
+                [x + 16, y],
                 [x, y + 16],
             ]
         elif col == 7:
@@ -182,8 +182,8 @@ class Level:
             ]
 
         for pos in positions:
-            t = Tile(pos, [self.obstacle_sprites, self.visible_sprites], 'stop', pygame.Surface((16, 16)))
-            t.image.fill('red')
+            t = Tile(pos, [self.obstacle_sprites, self.visible_sprites], 'stop', pygame.Surface((16, 16), pygame.SRCALPHA, 32))
+            # t.image.fill('red')
 
 
 
