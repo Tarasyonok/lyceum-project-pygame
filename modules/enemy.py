@@ -4,7 +4,7 @@ from modules.entity import Entity
 from modules.support import *
 
 class Enemy(Entity):
-    def __init__(self,monster_name,pos,groups,obstacle_sprites):
+    def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player):
 
         # general setup
         super().__init__(groups)
@@ -24,7 +24,11 @@ class Enemy(Entity):
 
         self.animation_move_speed = 0.15
         self.animation_idle_speed = 0.05
-        self.animation_attack_speed = 1
+        self.animation_attack_speed = 0.3
+        self.animation_hit_speed = 0.2
+        self.animation_die_speed = 0.15
+
+        self.save_direction = self.direction
 
         # stats
         self.monster_name = monster_name
@@ -47,10 +51,12 @@ class Enemy(Entity):
 
         self.vulnerable = True
         self.hit_time = None
-        self.vulnerability_duration = 300
+        self.vulnerability_duration = 400
+
+        self.damage_player = damage_player
 
     def import_graphics(self,name):
-        print(fixpath(f'assets/images/enemies/{name}'))
+        # print(fixpath(f'assets/images/enemies/{name}'))
         self.animations = {'idle': [], 'move': [], 'attack': [], 'hit': [], 'die': []}
         for p in next(walk(fixpath(f'assets/images/enemies/{name}')))[2]:
             for key in self.animations:
@@ -60,7 +66,7 @@ class Enemy(Entity):
 
     def get_player_distance_direction(self,player):
         enemy_vec = pygame.math.Vector2(self.rect.center)
-        player_vec = pygame.math.Vector2(player.rect.center)
+        player_vec = pygame.math.Vector2((player.rect.center[0], player.rect.center[1] + 10))
         distance = (player_vec - enemy_vec).magnitude()
 
         if distance > 0:
@@ -91,8 +97,10 @@ class Enemy(Entity):
     def actions(self,player):
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks()
+            self.damage_player(self.attack_damage)
         elif self.status == 'move':
             self.direction = self.get_player_distance_direction(player)[1]
+            self.save_direction = self.direction
         else:
             self.direction = pygame.math.Vector2()
 
@@ -104,41 +112,56 @@ class Enemy(Entity):
             self.health -= player.stats['attack']
         else:
             pass
-        print(self.health)
+        # print(self.health)
         if self.health <= 0:
             self.status = "die"
         else:
             self.status = "hit"
             self.hit_time = pygame.time.get_ticks()
         self.vulnerable = False
+        self.frame_index = 0
 
     def hit_reaction(self):
         if not self.vulnerable:
-            self.direction *= -self.resistance
+            self.direction = self.save_direction * (-self.resistance)
+            # print(self.direction)
+            # self.direction *= -500
 
     def animate(self):
         animation = self.animations[self.status]
-        
-        self.frame_index += self.animation_idle_speed
-        if self.frame_index >= len(animation):
-            if self.status == 'attack':
-                self.can_attack = False
-            self.frame_index = 0
 
-        if self.status == "hit" and int(self.frame_index) == len(animation) - 1:
-            self.status = "move"
-        if self.status == "die" and int(self.frame_index) == len(animation) - 1:
-            self.died = True
-            self.died_image = animation[int(self.frame_index)]
-            if self.direction.x < 0:
-                self.died_image = pygame.transform.flip(self.image, 1, 0)
-        if self.died:
-            self.image = self.died_image
-        else:
+
+        try:
             self.image = animation[int(self.frame_index)]
             if self.direction.x < 0:
                 self.image = pygame.transform.flip(self.image, 1, 0)
-        self.rect = self.image.get_rect(center=self.hitbox.center)
+            self.rect = self.image.get_rect(center=self.hitbox.center)
+        except:
+            print(int(self.frame_index), len(animation), self.status)
+
+
+        if self.status == 'idle':
+            self.frame_index += self.animation_idle_speed
+        elif self.status == 'move':
+            self.frame_index += self.animation_move_speed
+        elif self.status == 'attack':
+            self.frame_index += self.animation_attack_speed
+        elif self.status == 'hit':
+            self.frame_index += self.animation_hit_speed
+        elif self.status == 'die':
+            self.frame_index += self.animation_die_speed
+
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
+            if self.status == 'attack':
+                self.can_attack = False
+            if self.status == "hit":
+                self.status = "move"
+            if self.status == "die":
+                self.died = True
+
+        if self.died:
+            self.kill()
 
     def cooldown(self):
         current_time = pygame.time.get_ticks()
@@ -151,8 +174,8 @@ class Enemy(Entity):
 
     def update(self):
         self.hit_reaction()
-        if not self.stop_flag:
-            self.move(self.speed)
+        # if not self.stop_flag:
+        self.move(self.speed)
         self.animate()
         self.cooldown()
 

@@ -15,14 +15,14 @@ class Player(Entity):
 
         self.import_player_assets()
 
-        self.status = 'down'
+        self.status = 'down_idle'
 
         self.animation_move_speed = 0.15
         self.animation_idle_speed = 0.05
         self.animation_attack_speed = 0.1
 
         self.direction = pygame.math.Vector2()
-        self.save_direction = self.direction
+        self.save_direction = [0, 1]
 
         self.attacking = False
         self.attack_cooldown = 500
@@ -38,6 +38,11 @@ class Player(Entity):
 
         self.create_attack = create_attack
         self.destroy_attack = destroy_attack
+
+        self.vulnerable = True
+        self.hurt_time = None
+        self.vulnerability_duration = 500
+
 
     def import_player_assets(self):
         self.pathes = {
@@ -130,6 +135,7 @@ class Player(Entity):
         if self.attacking:
             self.direction = pygame.math.Vector2()
             if 'attack' not in self.status:
+                self.frame_index = 0
                 if 'idle' in self.status:
                     self.status = self.status.replace('_idle', '_attack')
                 else:
@@ -137,7 +143,6 @@ class Player(Entity):
         else:
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack', '')
-
 
     def cooldowns(self):
         curr_time = pygame.time.get_ticks()
@@ -147,31 +152,35 @@ class Player(Entity):
                 self.attacking = False
                 self.destroy_attack()
 
+        if not self.vulnerable:
+            if curr_time - self.hurt_time >= self.vulnerability_duration:
+                self.vulnerable = True
+
     def animate(self):
+        # loop over frame index
         animation = self.animations[self.status]
 
-        # loop over frame index
-        if 'idle' in self.status:
-            animation_speed = self.animation_idle_speed
-        elif 'attack' in self.status:
-            animation_speed = self.animation_attack_speed
-        else:
-            animation_speed = self.animation_move_speed
-        self.frame_index += animation_speed
-        if self.frame_index >= len(animation):
-            self.frame_index = 0
-            if 'attack' in self.status:
-                self.attacking = False
-                return
-                # self.status.replace()
-
-        # self.the image
+        # print(int(self.frame_index))
         self.image = animation[int(self.frame_index)]
-        if 'attack' in self.status and int(self.frame_index) == 3:
-            self.destroy_attack()
         self.rect = self.image.get_rect(center=self.hitbox.center)
 
 
+        if self.status == 'idle':
+            self.frame_index += self.animation_idle_speed
+        elif self.status == 'move':
+            self.frame_index += self.animation_move_speed
+        elif self.status == 'attack':
+            self.frame_index += self.animation_attack_speed
+        elif self.status == 'hit':
+            self.frame_index += self.animation_hit_speed
+        elif self.status == 'die':
+            self.frame_index += self.animation_die_speed
+
+        if int(self.frame_index) >= len(animation):
+            self.frame_index = 0
+            if 'attack' in self.status:
+                self.attacking = False
+                self.destroy_attack()
 
     def update(self):
         self.input()
