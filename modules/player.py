@@ -16,10 +16,13 @@ class Player(Entity):
         self.import_player_assets()
 
         self.status = 'down_idle'
+        self.prev_status = 'down_idle'
 
         self.animation_move_speed = 0.15
         self.animation_idle_speed = 0.05
         self.animation_attack_speed = 0.1
+        self.animation_hit_speed = 0.2
+        self.animation_die_speed = 0.2
 
         self.direction = pygame.math.Vector2()
         self.save_direction = [0, 1]
@@ -75,6 +78,16 @@ class Player(Entity):
             'upright_attack': ['uprightsword1', 'uprightsword2', 'uprightsword3', 'uprightsword4'],
             'upleft_attack': ['upleftsword1', 'upleftsword2', 'upleftsword3', 'upleftsword4'],
             'downleft_attack': ['downleftsword1', 'downleftsword2', 'downleftsword3', 'downleftsword4'],
+
+            'up_hit': ['uphit1', 'uphit2'],
+            'down_hit': ['downhit1', 'downhit2'],
+            'left_hit': ['lefthit1', 'lefthit2'],
+            'right_hit': ['righthit1', 'righthit2'],
+
+            'downright_hit': ['downrighthit1', 'downrighthit2'],
+            'upright_hit': ['uprighthit1', 'uprighthit2'],
+            'upleft_hit': ['uplefthit1', 'uplefthit2'],
+            'downleft_hit': ['downlefthit1', 'downlefthit2'],
         }
 
         self.animations = {}
@@ -86,6 +99,8 @@ class Player(Entity):
 
     def input(self):
         if self.attacking:
+            return
+        if self.status == 'hit' or self.status == 'die':
             return
         keys = pygame.key.get_pressed()
 
@@ -113,6 +128,7 @@ class Player(Entity):
             self.save_direction = self.direction[:]
 
         if part1 + part2 != '':
+            self.prev_status = self.status
             self.status = part1 + part2
 
         if keys[pygame.K_SPACE]:
@@ -128,6 +144,9 @@ class Player(Entity):
             # magic
 
     def get_status(self):
+        self.prev_status = self.status
+        if 'hit' in self.status:
+            return
         if self.direction[0] == 0 and self.direction[1] == 0:
             if 'idle' not in self.status and 'attack' not in self.status:
                 self.status = self.status + '_idle'
@@ -143,6 +162,9 @@ class Player(Entity):
         else:
             if 'attack' in self.status:
                 self.status = self.status.replace('_attack', '')
+
+        if self.prev_status != self.status:
+            self.frame_index = 0
 
     def cooldowns(self):
         curr_time = pygame.time.get_ticks()
@@ -160,27 +182,35 @@ class Player(Entity):
         # loop over frame index
         animation = self.animations[self.status]
 
+        if self.prev_status != self.status:
+             self.frame_index == 0
         # print(int(self.frame_index))
-        self.image = animation[int(self.frame_index)]
-        self.rect = self.image.get_rect(center=self.hitbox.center)
+        try:
+            self.image = animation[int(self.frame_index)]
+            self.rect = self.image.get_rect(center=self.hitbox.center)
+        except:
+            print(int(self.frame_index), len(animation), self.status)
 
 
-        if self.status == 'idle':
+        if 'idle' in self.status:
             self.frame_index += self.animation_idle_speed
-        elif self.status == 'move':
-            self.frame_index += self.animation_move_speed
-        elif self.status == 'attack':
+        elif 'attack' in self.status:
             self.frame_index += self.animation_attack_speed
-        elif self.status == 'hit':
+        elif 'hit' in self.status:
             self.frame_index += self.animation_hit_speed
-        elif self.status == 'die':
+        elif 'die' in self.status:
             self.frame_index += self.animation_die_speed
+        else:  # move
+            self.frame_index += self.animation_move_speed
+
 
         if int(self.frame_index) >= len(animation):
             self.frame_index = 0
             if 'attack' in self.status:
                 self.attacking = False
                 self.destroy_attack()
+            if 'hit' in self.status:
+                self.status = self.status.replace('_hit', '')
 
     def update(self):
         self.input()

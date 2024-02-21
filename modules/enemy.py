@@ -51,7 +51,7 @@ class Enemy(Entity):
 
         self.vulnerable = True
         self.hit_time = None
-        self.vulnerability_duration = 400
+        self.vulnerability_duration = 600
 
         self.damage_player = damage_player
 
@@ -107,6 +107,8 @@ class Enemy(Entity):
     def get_damage(self,player,attack_type):
         if not self.vulnerable:
             return
+        if self.status == 'hit' or self.status == 'die':
+            return
         self.direction = self.get_player_distance_direction(player)[1]
         if attack_type == 'sword':
             self.health -= player.stats['attack']
@@ -130,10 +132,9 @@ class Enemy(Entity):
     def animate(self):
         animation = self.animations[self.status]
 
-
         try:
             self.image = animation[int(self.frame_index)]
-            if self.direction.x < 0:
+            if self.save_direction.x < 0:
                 self.image = pygame.transform.flip(self.image, 1, 0)
             self.rect = self.image.get_rect(center=self.hitbox.center)
         except:

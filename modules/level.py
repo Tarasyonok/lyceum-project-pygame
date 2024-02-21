@@ -108,6 +108,9 @@ class Level:
             self.player.health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
+            if 'hit' not in self.player.status:
+                self.player.status = self.player.status.split('_')[0] + '_hit'
+                self.player.frame_index = 0
 
     def create_stop_blocks(self, col, x, y):
         positions = []
