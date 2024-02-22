@@ -4,6 +4,15 @@ FPS = 60
 # TILESIZE = 64
 TILESIZE = 32
 
+HITBOX_OFFSET = {
+    'player': (13, 13),
+    'object': (20, 20),
+    'stop': (0, 0),
+    'slime': (13, 13),
+    'cobra': (13, 13),
+    'minotaur': (-0, -0),
+}
+
 # ui
 BAR_HEIGHT = 20
 HEALTH_BAR_WIDTH = 200
