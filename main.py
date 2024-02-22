@@ -45,9 +45,24 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.main_menu.mouse_move(event.pos)
+                if event.type == pygame.KEYDOWN:
+                    # There's some code to add back window content here.
+                    # if event.key == pygame.K_RETURN and event.mod == pygame.KMOD_LCTRL:
+                    #     print("ok")
+                    if event.key == pygame.K_LEFT and pygame.key.get_mods[pygame.K_LALT]:
+                        print(123)
+                    # self.level.resize_game()
+                    # self.screen.fill((10, 9, 9))  # цвет фона
+                    # self.level.run()  # запускаем уровень
 
-            self.screen.fill((10, 9, 9)) # цвет фона
-            self.level.run() # запускаем уровень
+            if self.start_game:
+                self.screen.fill((10, 9, 9)) # цвет фона
+                self.level.run() # запускаем уровень
+            else:
+                self.main_menu.show()
             pygame.display.update() # обновляем экран, а то просто чёрное всё будет
             self.clock.tick(FPS) # параметр 60 указывает выполнять цикл while 60 раз в секунду
 
