@@ -7,6 +7,7 @@ from modules.debug import debug
 from modules.support import *
 from modules.ui import UI
 from modules.enemy import Enemy
+from modules.comment import Comment
 
 
 class Level:
@@ -28,6 +29,7 @@ class Level:
 
         # user interface
         self.ui = UI()
+        self.comments = [Comment((500, 500), "Hello, world!")]
 
         # self.animat
         # self.
@@ -199,6 +201,10 @@ class Level:
             t.image.fill('red')
 
 
+    def resize_game(self):
+        pass
+
+
 
     def run(self):
         # update and draw the game
@@ -207,6 +213,8 @@ class Level:
         self.visible_sprites.enemy_update(self.player)
         self.player_attack_logic()
         self.ui.display(self.player)
+        for comment in self.comments:
+            comment.show()
 
 
 class CameraGroup(pygame.sprite.Group):

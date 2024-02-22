@@ -9,8 +9,8 @@ BAR_HEIGHT = 20
 HEALTH_BAR_WIDTH = 200
 ENERGY_BAR_WIDTH = 140
 ITEM_BOX_SIZE = 80
-UI_FONT = 'assets/fonts/joystix.ttf'
-UI_FONT_SIZE = 18
+UI_FONT = 'assets/fonts/Icekingdom.ttf'
+UI_FONT_SIZE = 40
 
 # general colors
 WATER_COLOR = '#71ddee'

@@ -16,6 +16,7 @@ https://proproprogs.ru/modules/chto-takoe-pygame-karkas-prilozheniya-fps
 import pygame, sys
 from modules.settings import *
 from modules.level import Level
+from modules.start_menu import MainMenu
 from modules.debug import debug
 
 
@@ -33,6 +34,9 @@ class Game:
 
         self.clock = pygame.time.Clock()  # создаём инструмент тиков
         self.level = Level() # заггружаем уровень (Потом будем менять, т. к. уровней много. Здесь будет заставка)
+        self.main_menu = MainMenu()
+
+        self.start_game = False
 
     def run(self):
         while True: # Главный цикл
@@ -41,9 +45,21 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    # There's some code to add back window content here.
+                    # if event.key == pygame.K_RETURN and event.mod == pygame.KMOD_LCTRL:
+                    #     print("ok")
+                    if event.key == pygame.K_LEFT and pygame.key.get_mods[pygame.K_LALT]:
+                        print(123)
+                    # self.level.resize_game()
+                    # self.screen.fill((10, 9, 9))  # цвет фона
+                    # self.level.run()  # запускаем уровень
 
+            # if self.start_game:
             self.screen.fill((10, 9, 9)) # цвет фона
             self.level.run() # запускаем уровень
+            # else:
+            #     self.main_menu.show()
             pygame.display.update() # обновляем экран, а то просто чёрное всё будет
             self.clock.tick(FPS) # параметр 60 указывает выполнять цикл while 60 раз в секунду
 
