@@ -18,19 +18,19 @@ class MainMenu:
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, self.btn_new_game_rect, 3)
 
         self.btn_continue_game = self.font.render("CONTINUE GAME", True, TEXT_COLOR)
-        self.btn_continue_game_rect = self.btn_new_game.get_rect(topleft=(30, 200))
+        self.btn_continue_game_rect = self.btn_continue_game.get_rect(topleft=(30, 200))
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, self.btn_continue_game_rect, 3)
 
         self.btn_open_settings = self.font.render("OPEN SETTINGS", True, TEXT_COLOR)
-        self.btn_open_settings_rect = self.btn_new_game.get_rect(topleft=(30, 250))
+        self.btn_open_settings_rect = self.btn_open_settings.get_rect(topleft=(30, 250))
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, self.btn_open_settings_rect, 3)
 
         self.btn_show_statistics = self.font.render("SHOW STATISTICS", True, TEXT_COLOR)
-        self.btn_show_statistics_rect = self.btn_new_game.get_rect(topleft=(30, 300))
+        self.btn_show_statistics_rect = self.btn_show_statistics.get_rect(topleft=(30, 300))
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, self.btn_show_statistics_rect, 3)
 
         self.btn_quit_game = self.font.render("QUIT", True, TEXT_COLOR)
-        self.btn_quit_game_rect = self.btn_new_game.get_rect(topleft=(30, 350))
+        self.btn_quit_game_rect = self.btn_quit_game.get_rect(topleft=(30, 350))
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, self.btn_quit_game_rect, 3)
 
     def mouse_move(self, pos):
