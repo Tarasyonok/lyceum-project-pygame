@@ -10,8 +10,8 @@ class Player(Entity):
         self.image = pygame.image.load(fixpath("assets/images/red-wizard/downidle1.png"))
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.copy()
-        self.hitbox.top += HITBOX_OFFSET['player'][0]
-        self.hitbox.height -= HITBOX_OFFSET['player'][1]
+        self.hitbox.top += 13
+        self.hitbox.height -= 10
 
         self.import_player_assets()
 

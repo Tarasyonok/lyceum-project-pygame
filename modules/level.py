@@ -198,7 +198,7 @@ class Level:
 
         for pos in positions:
             t = Tile(pos, [self.obstacle_sprites, self.visible_sprites], 'stop', pygame.Surface((16, 16), pygame.SRCALPHA, 32))
-            t.image.fill('red')
+            # t.image.fill('red')
 
 
     def resize_game(self):
