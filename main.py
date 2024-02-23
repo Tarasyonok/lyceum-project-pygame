@@ -33,10 +33,11 @@ class Game:
         # -------------------------------------
 
         self.clock = pygame.time.Clock()  # создаём инструмент тиков
-        self.level = Level() # заггружаем уровень (Потом будем менять, т. к. уровней много. Здесь будет заставка)
+        exit_area = pygame.rect.Rect(500, 100, 300, 50)
+        self.level = Level('prod2', exit_area) # заггружаем уровень (Потом будем менять, т. к. уровней много. Здесь будет заставка)
         self.main_menu = MainMenu()
 
-        self.start_game = True
+        self.start_game = False
 
     def run(self):
         while True: # Главный цикл
@@ -53,15 +54,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         self.main_menu.mouse_click(event.pos)
-                # if event.type == pygame.KEYDOWN:
-                    # There's some code to add back window content here.
-                    # if event.key == pygame.K_RETURN and event.mod == pygame.KMOD_LCTRL:
-                    #     print("ok")
-                    # if event.key == pygame.K_LEFT and pygame.key.get_mods[pygame.K_LALT]:
-                    #     print(123)
-                    # self.level.resize_game()
-                    # self.screen.fill((10, 9, 9))  # цвет фона
-                    # self.level.run()  # запускаем уровень
+                        self.start_game = True
 
             if self.start_game:
                 self.screen.fill((10, 9, 9)) # цвет фона

@@ -1,5 +1,5 @@
 import pygame
-from settings *
+from settings import *
 
 class Opening:
     def __init__(self):
@@ -7,8 +7,8 @@ class Opening:
         self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
 
         self.story = [
-            "Hello",
-            "world",
+            ("Hello", 500),
+            ("world", 500),
         ]
 
     def start_opening(self):
@@ -22,3 +22,14 @@ class Opening:
     def end_opening(self):
         # Убираем чёрное затемнение
         pass
+
+    def show_story(self):
+        self.start_opening()
+        for text, delta in self.story:
+            self.show_text(text, delta)
+        self.end_opening()
+
+    def cooldowns(self):
+        curr_time = pygame.time.get_ticks()
+
+        # что-то сравниваем
