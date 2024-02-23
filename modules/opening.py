@@ -1,5 +1,5 @@
 import pygame
-from settings *
+from modules.settings import *
 
 class Opening:
     def __init__(self):
@@ -12,13 +12,18 @@ class Opening:
         ]
 
     def start_opening(self):
-        # Замемняем экран до чёрного цвета
         pass
 
     def show_text(self, text, delta):
-        # Показывает текст text на экране на пормежуток времени delta
-        pass
+        half_width = self.display_surface.get_width() // 2
+        half_height = self.display_surface.get_height() // 2
+
+        self.curr_text = self.font.render("SOMETHING", True, self.normal_color)
+        self.curr_text_rect = self.curr_text.get_rect(center=(half_width, half_height))
 
     def end_opening(self):
         # Убираем чёрное затемнение
         pass
+
+    def display(self):
+        self.display_surface.blit(self.curr_text, self.curr_text_rect)
