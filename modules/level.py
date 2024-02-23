@@ -36,11 +36,11 @@ class Level:
 
     def create_map(self):
         layouts = {
-            'stop': import_csv_layout(fixpath('levels/level1/map_Stop.csv')),
-            'detail': import_csv_layout(fixpath('levels/level1/map_Details.csv')),
-            'wall': import_csv_layout(fixpath('levels/level1/map_Walls.csv')),
-            'object': import_csv_layout(fixpath('levels/level1/map_Objects.csv')),
-            'entities': import_csv_layout(fixpath('levels/level1/map_Entities.csv')),
+            'stop': import_csv_layout(fixpath('levels/prod2/map_Stop.csv')),
+            'detail': import_csv_layout(fixpath('levels/prod2/map_Details.csv')),
+            'wall': import_csv_layout(fixpath('levels/prod2/map_Walls.csv')),
+            'object': import_csv_layout(fixpath('levels/prod2/map_Objects.csv')),
+            'entities': import_csv_layout(fixpath('levels/prod2/map_Entities.csv')),
         }
 
         for style, layout in layouts.items():
@@ -225,7 +225,7 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_height() // 2
         self.offset = [0, 0]
 
-        self.floor_surf = pygame.image.load(fixpath('levels/level3/Floor.png')).convert()
+        self.floor_surf = pygame.image.load(fixpath('levels/prod2/Floor.png')).convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):

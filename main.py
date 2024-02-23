@@ -36,7 +36,7 @@ class Game:
         self.level = Level() # заггружаем уровень (Потом будем менять, т. к. уровней много. Здесь будет заставка)
         self.main_menu = MainMenu()
 
-        self.start_game = False
+        self.start_game = True
 
     def run(self):
         while True: # Главный цикл
