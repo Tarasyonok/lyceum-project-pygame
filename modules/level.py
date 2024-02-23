@@ -11,7 +11,7 @@ from modules.comment import Comment
 
 
 class Level:
-    def __init__(self, level_name, exit_area):
+    def __init__(self):
 
         # get the display surface
         self.display_surface = pygame.display.get_surface()
@@ -25,10 +25,8 @@ class Level:
         self.attackable_sprites = pygame.sprite.Group()
 
         # sprite setup
-        self.level_name = level_name
-        self.create_map(self.level_name)
-
-        self.exit_area = exit_area
+        self.monsters_left = 0
+        self.create_map('prod2')
 
         # user interface
         self.ui = UI()
@@ -37,13 +35,13 @@ class Level:
         # self.animat
         # self.
 
-    def create_map(self):
+    def create_map(self, level_name):
         layouts = {
-            'stop': import_csv_layout(fixpath(f'levels/{self.level_name}/map_Stop.csv')),
-            'detail': import_csv_layout(fixpath(f'levels/{self.level_name}/map_Details.csv')),
-            'wall': import_csv_layout(fixpath(f'levels/{self.level_name}/map_Walls.csv')),
-            'object': import_csv_layout(fixpath(f'levels/{self.level_name}/map_Objects.csv')),
-            'entities': import_csv_layout(fixpath(f'levels/{self.level_name}/map_Entities.csv')),
+            'stop': import_csv_layout(fixpath(f'levels/{level_name}/map_Stop.csv')),
+            'detail': import_csv_layout(fixpath(f'levels/{level_name}/map_Details.csv')),
+            'wall': import_csv_layout(fixpath(f'levels/{level_name}/map_Walls.csv')),
+            'object': import_csv_layout(fixpath(f'levels/{level_name}/map_Objects.csv')),
+            'entities': import_csv_layout(fixpath(f'levels/{level_name}/map_Entities.csv')),
         }
 
         for style, layout in layouts.items():
@@ -75,6 +73,7 @@ class Level:
                                 elif col == 2: monster_name = 'cobra'
                                 elif col == 8: monster_name = 'golem'
                                 else: monster_name = 'slime'
+                                self.monsters_left += 1
                                 # elif col == 12: monster_name = 'cyclop'
                                 # elif col == 13: monster_name = 'minotaur'
                                 Enemy(
@@ -98,7 +97,8 @@ class Level:
         if collision_sprites:
             for target in collision_sprites:
                 target.get_damage(self.player, self.current_attack.attack_type)
-
+                if target.health <= 0:
+                    self.monsters_left -= 1
 
     def destroy_attack(self):
         if self.current_attack:
@@ -211,12 +211,7 @@ class Level:
     def resize_game(self):
         pass
 
-    def check_game_end(self):
-        if self.monsters_left == 0 and pygame.sprite.collide_rect(self.player, self.exit_area):
-            return True, 'win'
-        if self.player.health <= 0:
-            return True, 'lose'
-        return False
+
 
     def run(self):
         # update and draw the game
