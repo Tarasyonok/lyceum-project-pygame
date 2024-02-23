@@ -20,6 +20,10 @@ class Enemy(Entity):
         self.hitbox = self.rect.copy()
         self.hitbox.top += 10
         self.hitbox.height -= 10
+        # if monster_name == 'cyclop':
+        #     self.hitbox.top -= 30
+        #     self.hitbox.height += 300
+
         self.obstacle_sprites = obstacle_sprites
 
         self.animation_move_speed = 0.15

@@ -71,6 +71,8 @@ class Level:
                                 if col == 1: monster_name = 'slime'
                                 elif col == 2: monster_name = 'cobra'
                                 elif col == 8: monster_name = 'golem'
+                                elif col == 12: monster_name = 'cyclop'
+                                elif col == 13: monster_name = 'minotaur'
                                 Enemy(
                                     monster_name,
                                     (x,y),

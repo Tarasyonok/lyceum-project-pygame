@@ -15,8 +15,8 @@ class Player(Entity):
 
         self.import_player_assets()
 
-        self.status = 'down_idle'
-        self.prev_status = 'down_idle'
+        self.status = 'up_idle'
+        self.prev_status = 'up_idle'
 
         self.animation_move_speed = 0.15
         self.animation_idle_speed = 0.05
