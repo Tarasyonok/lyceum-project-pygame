@@ -26,6 +26,7 @@ UI_BORDER_COLOR_ACTIVE = 'gold'
 monster_data = {
     'slime': {'health': 50, 'exp': 20, 'damage': 10, 'attack_type': None, 'attack_sound': None, 'speed': 1, 'resistance': 10, 'attack_radius': 30, 'notice_radius': 300},
     'cobra': {'health': 50, 'exp': 20, 'damage': 10, 'attack_type': None, 'attack_sound': None, 'speed': 1, 'resistance': 10, 'attack_radius': 30, 'notice_radius': 300},
+    'golem': {'health': 150, 'exp': 100, 'damage': 25, 'attack_type': None, 'attack_sound': None, 'speed': 2, 'resistance': 5, 'attack_radius': 30, 'notice_radius': 300},
 }
 
 MAIN_TILE_IMAGES = {}

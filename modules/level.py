@@ -25,22 +25,22 @@ class Level:
         self.attackable_sprites = pygame.sprite.Group()
 
         # sprite setup
-        self.create_map()
+        self.create_map('prod2')
 
         # user interface
         self.ui = UI()
-        self.comments = [Comment((500, 500), "Hello, world!")]
+        self.comments = []  # [Comment((500, 500), "Hello, world!")]
 
         # self.animat
         # self.
 
-    def create_map(self):
+    def create_map(self, level_name):
         layouts = {
-            'stop': import_csv_layout(fixpath('levels/prod2/map_Stop.csv')),
-            'detail': import_csv_layout(fixpath('levels/prod2/map_Details.csv')),
-            'wall': import_csv_layout(fixpath('levels/prod2/map_Walls.csv')),
-            'object': import_csv_layout(fixpath('levels/prod2/map_Objects.csv')),
-            'entities': import_csv_layout(fixpath('levels/prod2/map_Entities.csv')),
+            'stop': import_csv_layout(fixpath(f'levels/{level_name}/map_Stop.csv')),
+            'detail': import_csv_layout(fixpath(f'levels/{level_name}/map_Details.csv')),
+            'wall': import_csv_layout(fixpath(f'levels/{level_name}/map_Walls.csv')),
+            'object': import_csv_layout(fixpath(f'levels/{level_name}/map_Objects.csv')),
+            'entities': import_csv_layout(fixpath(f'levels/{level_name}/map_Entities.csv')),
         }
 
         for style, layout in layouts.items():
@@ -61,7 +61,7 @@ class Level:
                         if style == 'entities':
                             if col == 0:
                                 self.player = Player(
-                                    (2000, 2000),
+                                    (x, y),
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
                                     self.create_attack,
@@ -70,6 +70,7 @@ class Level:
                             else:
                                 if col == 1: monster_name = 'slime'
                                 elif col == 2: monster_name = 'cobra'
+                                elif col == 8: monster_name = 'golem'
                                 Enemy(
                                     monster_name,
                                     (x,y),

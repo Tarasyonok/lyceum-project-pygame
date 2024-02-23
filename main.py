@@ -26,7 +26,7 @@ class Game:
         # general setup
         pygame.init()  # инициализируем pygame
         self.screen = pygame.display.set_mode((WIDTH, HEIGTH))  # создаём экран
-        pygame.display.set_caption('Reincarnation of the strongest hero')  # задаём заголовок
+        pygame.display.set_caption('Dungeon runner')  # задаём заголовок
 
         # -------------------------------------
         # Вот тебе задание: выбери и отобрази иконку на окне игры
@@ -45,15 +45,20 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    self.main_menu.mouse_hover(event.pos)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        self.main_menu.mouse_move(event.pos)
-                if event.type == pygame.KEYDOWN:
+                        self.main_menu.mouse_press(event.pos)
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        self.main_menu.mouse_click(event.pos)
+                # if event.type == pygame.KEYDOWN:
                     # There's some code to add back window content here.
                     # if event.key == pygame.K_RETURN and event.mod == pygame.KMOD_LCTRL:
                     #     print("ok")
-                    if event.key == pygame.K_LEFT and pygame.key.get_mods[pygame.K_LALT]:
-                        print(123)
+                    # if event.key == pygame.K_LEFT and pygame.key.get_mods[pygame.K_LALT]:
+                    #     print(123)
                     # self.level.resize_game()
                     # self.screen.fill((10, 9, 9))  # цвет фона
                     # self.level.run()  # запускаем уровень
