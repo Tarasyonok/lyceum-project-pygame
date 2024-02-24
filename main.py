@@ -60,6 +60,7 @@ class Game:
                         self.main_menu.mouse_click(event.pos)
                         self.opening = Opening()
                         self.start_opening = True
+                        pygame.mouse.set_visible(False)
                         # self.start_game = True
 
             # self.screen.fill((200, 200, 200)) # цвет фона
@@ -80,6 +81,7 @@ class Game:
                         and not self.opening.tell_story_flag
                         and not self.opening.end_opening_flag):
                     self.start_opening = False
+                    pygame.mouse.set_visible(True)
 
 
             pygame.display.update() # обновляем экран, а то просто чёрное всё будет
