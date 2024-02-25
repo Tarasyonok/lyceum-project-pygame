@@ -219,12 +219,23 @@ class Level:
 
         return False, self.monsters_left
 
+    def display_text(self, text):
+        font = pygame.font.Font("assets/fonts/joystix.ttf", 24)
+        x, y = self.display_surface.get_size()
+
+        self.text = font.render(text, False, TEXT_COLOR)
+        self.rect = self.text.get_rect(bottomleft=((x - self.text.get_rect().width) // 2, y - 50))
+        pygame.draw.rect(self.display_surface, UI_BG_COLOR, self.rect.inflate(20, 20))
+        self.display_surface.blit(self.text, self.rect)
+        pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, self.rect.inflate(20, 20), 3)
+
     def run(self):
         # update and draw the game
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
         self.visible_sprites.enemy_update(self.player)
         self.player_attack_logic()
+        self.display_text("WELCOME, DMITRY SERGEEVICH!")
         self.ui.display(self.player)
         for comment in self.comments:
             comment.show()
