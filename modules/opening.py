@@ -47,8 +47,6 @@ class Opening:
             self.pre_text_delay = 500
             self.end_text_delay = 500
 
-            print()
-
             half_width = self.display_surface.get_width() // 2
             half_height = self.display_surface.get_height() // 2
 
