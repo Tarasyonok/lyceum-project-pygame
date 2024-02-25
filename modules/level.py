@@ -219,8 +219,21 @@ class Level:
 
         return False, self.monsters_left
 
-    def display_text(self, text):
-        font = pygame.font.Font("assets/fonts/joystix.ttf", 24)
+    def display_text(self, texts, delta):
+        if 'start_time' not in self.__dict__:
+            self.start_time = pygame.time.get_ticks()
+        if 'counter' not in self.__dict__:
+            self.counter = 0
+        if self.counter >= len(texts):
+            return
+        if self.start_time + delta < pygame.time.get_ticks():
+            self.counter += 1
+            if self.counter >= len(texts):
+                return
+            self.start_time = pygame.time.get_ticks()
+
+        text = texts[self.counter]
+        font = pygame.font.Font('assets/fonts/joystix.ttf', 24)
         x, y = self.display_surface.get_size()
 
         self.text = font.render(text, False, TEXT_COLOR)
@@ -235,11 +248,11 @@ class Level:
         self.visible_sprites.update()
         self.visible_sprites.enemy_update(self.player)
         self.player_attack_logic()
-        self.display_text("WELCOME, DMITRY SERGEEVICH!")
+        self.display_text(["WELCOME, DMITRY SERGEEVICH!", "W, A, S, D is your movement", "SPACE is your Attack"], 3000)
         self.ui.display(self.player)
         for comment in self.comments:
             comment.show()
-        print(self.check_level_end(), self.player.rect, self.exit_area, self.player.rect.colliderect(self.exit_area))
+        # print(self.check_level_end(), self.player.rect, self.exit_area, self.player.rect.colliderect(self.exit_area))
 
 
 class CameraGroup(pygame.sprite.Group):
