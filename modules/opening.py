@@ -7,8 +7,8 @@ class Opening:
         self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
 
         self.story = [
-            ("Hello", 2000),
-            ("world", 2000),
+            ("Only you Dmitri Sergeevich can save the world", 2000),
+            # ("world", 2000),
         ]
 
         self.text_color = pygame.color.Color((255, 255, 255))
