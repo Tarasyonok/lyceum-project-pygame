@@ -230,7 +230,7 @@ class Level:
             self.start_time = pygame.time.get_ticks()
 
         text = texts[self.counter]
-        font = pygame.font.Font('assets/fonts/joystix.ttf', 24)
+        font = pygame.font.Font('assets/fonts/joystix.ttf', 22)
         x, y = self.display_surface.get_size()
 
         self.text = font.render(text, False, TEXT_COLOR)
@@ -245,7 +245,7 @@ class Level:
         self.visible_sprites.update()
         self.visible_sprites.enemy_update(self.player)
         self.player_attack_logic()
-        self.display_text(["WELCOME, DMITRY SERGEEVICH!", "W, A, S, D is your movement", "SPACE is your Attack"], 3000)
+        self.display_text(['WELCOME, DMITRY SERGEEVICH!', '[W][A][S][D] IS YOUR MOVEMENT', '[SPACE] IS YOUR ATTACK'], 3000)
         self.ui.display(self.player)
         for comment in self.comments:
             comment.show()
