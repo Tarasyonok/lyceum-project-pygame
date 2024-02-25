@@ -39,7 +39,7 @@ class Game:
         self.level = Level() # заггружаем уровень (Потом будем менять, т. к. уровней много. Здесь будет заставка)
         self.main_menu = MainMenu()
 
-        self.start_game = False
+        self.start_game = True
         self.start_opening = False
 
     def run(self):
@@ -55,12 +55,12 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         self.main_menu.mouse_press(event.pos)
-                if event.type == pygame.MOUSEBUTTONUP:
-                    if event.button == 1:
-                        self.main_menu.mouse_click(event.pos)
-                        self.opening = Opening()
-                        self.start_opening = True
-                        pygame.mouse.set_visible(False)
+                # if event.type == pygame.MOUSEBUTTONUP:
+                #     if event.button == 1:
+                #         self.main_menu.mouse_click(event.pos)
+                #         self.opening = Opening()
+                #         self.start_opening = True
+                #         pygame.mouse.set_visible(False)
                         # self.start_game = True
 
             # self.screen.fill((200, 200, 200)) # цвет фона
