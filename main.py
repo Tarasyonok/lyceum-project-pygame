@@ -34,10 +34,17 @@ class Game:
         # -------------------------------------
 
         self.clock = pygame.time.Clock()  # создаём инструмент тиков
-        exit_area = pygame.rect.Rect(0, 0, 10000, 10000)
         # 'prod2', exit_area
-        self.level = Level('prod2', exit_area) # заггружаем уровень (Потом будем менять, т. к. уровней много. Здесь будет заставка)
+        # self.level = Level('prod2', exit_area) # заггружаем уровень (Потом будем менять, т. к. уровней много. Здесь будет заставка)
         self.main_menu = MainMenu()
+
+        self.levels = [
+            ('level0', pygame.rect.Rect(0, 0, 10000, 10000)),
+            ('prod2', pygame.rect.Rect(0, 0, 10000, 10000)),
+        ]
+        self.level_index = 0
+
+        self.curr_level = Level(*self.levels[self.level_index])
 
         self.start_game = True
         self.start_opening = False
@@ -68,7 +75,12 @@ class Game:
 
             if self.start_game:
                 self.screen.fill((10, 9, 9)) # цвет фона
-                self.level.run() # запускаем уровень
+                self.curr_level.run() # запускаем уровень
+                game_result = self.curr_level.check_level_end()
+                if game_result[0] == True:
+                    if game_result[1] == 'win':
+                        self.level_index += 1
+                    self.curr_level = Level(*self.levels[self.level_index])
             else:
                 self.main_menu.show()
 

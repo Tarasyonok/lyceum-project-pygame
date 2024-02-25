@@ -17,7 +17,7 @@ class Level:
         self.display_surface = pygame.display.get_surface()
 
         # sprite group setup
-        self.visible_sprites = CameraGroup()
+        self.visible_sprites = CameraGroup(level_name)
         self.obstacle_sprites = pygame.sprite.Group()
 
         self.current_attack = None
@@ -33,9 +33,6 @@ class Level:
         # user interface
         self.ui = UI()
         self.comments = []  # [Comment((500, 500), "Hello, world!")]
-
-        self.is_complited = False
-
         # self.animat
         # self.
 
@@ -217,7 +214,7 @@ class Level:
         if self.monsters_left == 0 and self.player.rect.colliderect(self.exit_area):
             return True, 'win'
 
-        return False, self.monsters_left
+        return False, 'still playing'
 
     def display_text(self, text):
         font = pygame.font.Font("assets/fonts/joystix.ttf", 24)
@@ -243,14 +240,14 @@ class Level:
 
 
 class CameraGroup(pygame.sprite.Group):
-    def __init__(self):
+    def __init__(self, level_name):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
         self.half_width = self.display_surface.get_width() // 2
         self.half_height = self.display_surface.get_height() // 2
         self.offset = [0, 0]
 
-        self.floor_surf = pygame.image.load(fixpath('levels/prod2/Floor.png')).convert()
+        self.floor_surf = pygame.image.load(fixpath(f'levels/{level_name}/Floor.png')).convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):
