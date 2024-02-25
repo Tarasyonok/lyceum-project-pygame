@@ -34,9 +34,9 @@ class Game:
         # -------------------------------------
 
         self.clock = pygame.time.Clock()  # создаём инструмент тиков
-        # exit_area = pygame.rect.Rect(500, 100, 300, 50)
+        exit_area = pygame.rect.Rect(0, 0, 10000, 10000)
         # 'prod2', exit_area
-        self.level = Level() # заггружаем уровень (Потом будем менять, т. к. уровней много. Здесь будет заставка)
+        self.level = Level('prod2', exit_area) # заггружаем уровень (Потом будем менять, т. к. уровней много. Здесь будет заставка)
         self.main_menu = MainMenu()
 
         self.start_game = True

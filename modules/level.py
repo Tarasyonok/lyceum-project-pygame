@@ -11,7 +11,7 @@ from modules.comment import Comment
 
 
 class Level:
-    def __init__(self):
+    def __init__(self, level_name, exit_area):
 
         # get the display surface
         self.display_surface = pygame.display.get_surface()
@@ -26,11 +26,15 @@ class Level:
 
         # sprite setup
         self.monsters_left = 0
-        self.create_map('prod2')
+        self.level_name = level_name
+        self.exit_area = exit_area
+        self.create_map(level_name)
 
         # user interface
         self.ui = UI()
         self.comments = []  # [Comment((500, 500), "Hello, world!")]
+
+        self.is_complited = False
 
         # self.animat
         # self.
@@ -207,11 +211,13 @@ class Level:
             t = Tile(pos, [self.obstacle_sprites, self.visible_sprites], 'stop', pygame.Surface((16, 16), pygame.SRCALPHA, 32))
             # t.image.fill('red')
 
+    def check_level_end(self):
+        if self.player.health <= 0:
+            return True, 'lose'
+        if self.monsters_left == 0 and self.player.rect.colliderect(self.exit_area):
+            return True, 'win'
 
-    def resize_game(self):
-        pass
-
-
+        return False, self.monsters_left
 
     def run(self):
         # update and draw the game
@@ -222,6 +228,7 @@ class Level:
         self.ui.display(self.player)
         for comment in self.comments:
             comment.show()
+        print(self.check_level_end(), self.player.rect, self.exit_area, self.player.rect.colliderect(self.exit_area))
 
 
 class CameraGroup(pygame.sprite.Group):
