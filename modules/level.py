@@ -33,8 +33,12 @@ class Level:
         # user interface
         self.ui = UI()
         self.comments = []  # [Comment((500, 500), "Hello, world!")]
-        # self.animat
-        # self.
+
+        # statistics
+        self.deaths = 0
+        self.kills = 0
+        self.game_time = 0
+
 
     def create_map(self, level_name):
         layouts = {
@@ -209,10 +213,10 @@ class Level:
             # t.image.fill('red')
 
     def check_level_end(self):
-        # if self.player.health <= 0:
-        #     return True, 'lose'
-        # if self.monsters_left == 0 and self.player.rect.colliderect(self.exit_area):
-        #     return True, 'win'
+        if self.player.health <= 0:
+            return True, 'lose'
+        if self.monsters_left == 0 and self.player.rect.colliderect(self.exit_area):
+            return True, 'win'
 
         return False, 'still playing'
 

@@ -42,12 +42,12 @@ class Game:
             ('level0', pygame.rect.Rect(0, 0, 10000, 10000)),
             ('prod2', pygame.rect.Rect(0, 0, 10000, 10000)),
         ]
-        self.level_index = 0
 
-        self.curr_level = Level(*self.levels[self.level_index])
-
-        self.start_game = True
+        self.start_game = False
         self.start_opening = False
+
+    def save_game(self):
+        pass
 
     def run(self):
         while True: # Главный цикл
@@ -62,8 +62,14 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         self.main_menu.mouse_press(event.pos)
-                # if event.type == pygame.MOUSEBUTTONUP:
-                #     if event.button == 1:
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        if self.main_menu.choosing_level:
+                            self.level_index = self.main_menu.continue_game()
+                            self.curr_level = Level(*self.levels[self.level_index])
+                            self.start_game = True
+                        self.main_menu.mouse_click(event.pos)
+
                 #         self.main_menu.mouse_click(event.pos)
                 #         self.opening = Opening()
                 #         self.start_opening = True

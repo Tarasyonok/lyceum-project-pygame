@@ -46,6 +46,14 @@ class Player(Entity):
         self.hurt_time = None
         self.vulnerability_duration = 500
 
+        self.sounds = {
+            # 'idle': pygame.mixer.Sound(fixpath(f'assets/sounds/player/idle.mp3')),
+            # 'move': pygame.mixer.Sound(fixpath(f'assets/sounds/player/move.mp3')),
+            # 'attack': pygame.mixer.Sound(fixpath(f'assets/sounds/player/attack.mp3')),
+            # 'hit': pygame.mixer.Sound(fixpath(f'assets/sounds/player/hit.mp3')),
+            # 'die': pygame.mixer.Sound(fixpath(f'assets/sounds/player/die.mp3')),
+        }
+
 
     def import_player_assets(self):
         self.pathes = {
@@ -177,6 +185,14 @@ class Player(Entity):
         if not self.vulnerable:
             if curr_time - self.hurt_time >= self.vulnerability_duration:
                 self.vulnerable = True
+
+    def play_sounds(self):
+        if self.frame_index == 0:
+            try:
+                sound = self.sounds[self.status]
+                sound.play()
+            except KeyError:
+                pass
 
     def animate(self):
         # loop over frame index

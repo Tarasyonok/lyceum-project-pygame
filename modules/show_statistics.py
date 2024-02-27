@@ -155,7 +155,7 @@ class MainMenu:
         if top3 <= y <= bottom3 and left3 <= x <= right3:
             self.btn_show_statistics = self.font.render("SHOW STATISTICS", True, color)
         if top4 <= y <= bottom4 and left4 <= x <= right4:
-            self.quit_game()
+            self.btn_quit_game = self.font.render("QUIT", True, color)
 
 
     def show(self):

@@ -59,6 +59,14 @@ class Enemy(Entity):
 
         self.damage_player = damage_player
 
+        self.sounds = {
+            # 'idle': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/idle.mp3')),
+            'move': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/move.mp3')),
+            'attack': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/attack.mp3')),
+            # 'hit': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/hit.mp3')),
+            # 'die': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/die.mp3')),
+        }
+
     def import_graphics(self,name):
         # print(fixpath(f'assets/images/enemies/{name}'))
         self.animations = {'idle': [], 'move': [], 'attack': [], 'hit': [], 'die': []}
@@ -133,6 +141,14 @@ class Enemy(Entity):
             # print(self.direction)
             # self.direction *= -500
 
+    def play_sounds(self):
+        if self.frame_index == 0:
+            try:
+                sound = self.sounds[self.status]
+                sound.play()
+            except KeyError:
+                pass
+
     def animate(self):
         animation = self.animations[self.status]
 
@@ -181,6 +197,7 @@ class Enemy(Entity):
         self.hit_reaction()
         # if not self.stop_flag:
         self.move(self.speed)
+        self.play_sounds()
         self.animate()
         self.cooldown()
 
