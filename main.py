@@ -53,8 +53,16 @@ class Game:
         con = sqlite3.connect(fixpath("data/database.sqlite"))
         cur = con.cursor()
 
+        deaths = cur.execute(f"""
+        SELECT deaths from Games
+        WHERE id = {self.curr_player}
+        """).fetchone()[0]
+
+        deaths += is_died
+
+        print(level, kills, deaths, time)
         cur.execute(f"""
-        UPDATE Games SET level = {level}, kills = {kills}, deaths = deaths + {is_died}, time = {time}
+        UPDATE Games SET level={level}, kills={kills}, deaths={deaths}, time={time}
         WHERE id = {self.curr_player}
         """)
 
@@ -79,15 +87,16 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         if self.main_menu.choosing_level:
-                            id, text = self.main_menu.mouse_choosing_click(event.pos)
-                            self.curr_player = id
-                            if id:
+                            click_info = self.main_menu.mouse_choosing_click(event.pos)
+                            if click_info:
+                                game_id, text = click_info
+                                self.curr_player = game_id
                                 if text == "NEW GAME":
-                                    self.level_index = self.main_menu.new_game(id)
+                                    self.level_index = self.main_menu.new_game(game_id)
                                     self.curr_level = Level(*self.levels[self.level_index])
                                     self.start_game = True
                                 elif text == "CONTINUE":
-                                    self.level_index = self.main_menu.continue_game(id)
+                                    self.level_index = self.main_menu.continue_game(game_id)
                                     self.curr_level = Level(*self.levels[self.level_index])
                                     self.start_game = True
                         else:
@@ -110,7 +119,7 @@ class Game:
                     if game_result[1] == 'win':
                         self.level_index += 1
                     self.curr_level = Level(*self.levels[self.level_index])
-                    # self.save_game(self.curr_level, self.curr_level.kills,)
+                    self.save_game(self.level_index + 1, self.curr_level.kills, 0, 'time')
             else:
                 self.main_menu.show()
 
