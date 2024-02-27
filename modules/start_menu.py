@@ -153,6 +153,11 @@ class MainMenu:
         self.mouse_pressed = True
         self.mouse_hover(pos)
 
+    def mouse_check(self, rect, pos):
+        x, y = pos
+        left, right, top, bottom = rect.left, rect.right, rect.top, rect.bottom
+        return top <= y <= bottom and left <= x <= right
+
     def mouse_click(self, pos):
         self.mouse_pressed = False
 
