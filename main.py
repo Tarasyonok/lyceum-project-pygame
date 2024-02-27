@@ -79,10 +79,19 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         if self.main_menu.choosing_level:
-                            self.level_index, self.curr_player = self.main_menu.continue_game()
-                            self.curr_level = Level(*self.levels[self.level_index])
-                            self.start_game = True
-                        self.main_menu.mouse_click(event.pos)
+                            id, text = self.main_menu.mouse_choosing_click(event.pos)
+                            self.curr_player = id
+                            if id:
+                                if text == "NEW GAME":
+                                    self.level_index = self.main_menu.new_game(id)
+                                    self.curr_level = Level(*self.levels[self.level_index])
+                                    self.start_game = True
+                                elif text == "CONTINUE":
+                                    self.level_index = self.main_menu.continue_game(id)
+                                    self.curr_level = Level(*self.levels[self.level_index])
+                                    self.start_game = True
+                        else:
+                            self.main_menu.mouse_click(event.pos)
 
                 #         self.main_menu.mouse_click(event.pos)
                 #         self.opening = Opening()
@@ -101,7 +110,7 @@ class Game:
                     if game_result[1] == 'win':
                         self.level_index += 1
                     self.curr_level = Level(*self.levels[self.level_index])
-                    # self.save_game(self.curr_level, self.curr_level.kills, )
+                    # self.save_game(self.curr_level, self.curr_level.kills,)
             else:
                 self.main_menu.show()
 
