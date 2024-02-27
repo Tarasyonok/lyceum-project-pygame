@@ -172,17 +172,16 @@ class MainMenu:
             self.choosing_level = True
         if top2 <= y <= bottom2 and left2 <= x <= right2:
             self.btn_open_settings = self.font.render("OPEN SETTINGS", True, color)
+            self.FLAG = True
         if top3 <= y <= bottom3 and left3 <= x <= right3:
             self.btn_show_statistics = self.font.render("SHOW STATISTICS", True, color)
         if top4 <= y <= bottom4 and left4 <= x <= right4:
             self.quit_game()
 
     def create_settings_interface(self):
-        self.volume = self.font.render("Громкость:", True, 'white')
-        self.volume_rect = self.volume.get_rect(topleft=(500, 300))
-
-        self.plus_volume = self.font.render("+", True, 'white')
-        self.plus_volume_rect = self.plus_volume.get_rect(topleft=(750, 300))
+        x, y = self.display_surface.get_size()
+        self.volume = self.font.render("Will be added soon", True, 'white')
+        self.volume_rect = self.volume.get_rect(bottomleft=((x - self.volume.get_rect().width) // 2, y // 2))
 
 
     def show(self):
@@ -190,7 +189,6 @@ class MainMenu:
 
         if self.FLAG:
             self.display_surface.blit(self.volume, self.volume_rect)
-            self.display_surface.blit(self.plus_volume, self.plus_volume_rect)
         else:
             if self.choosing_level:
                 self.display_surface.blit(self.place1, self.place1_rect)
