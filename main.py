@@ -19,6 +19,9 @@ from modules.level import Level
 from modules.start_menu import MainMenu
 from modules.opening import Opening
 from modules.debug import debug
+from modules.support import *
+import sqlite3
+
 
 
 class Game:
@@ -46,8 +49,19 @@ class Game:
         self.start_game = False
         self.start_opening = False
 
-    def save_game(self):
-        pass
+    def save_game(self, level, kills, is_died, time):
+        con = sqlite3.connect(fixpath("data/database.sqlite"))
+        cur = con.cursor()
+
+        cur.execute(f"""
+        UPDATE Games SET level = {level}, kills = {kills}, deaths = deaths + {is_died}, time = {time}
+        WHERE id = {self.curr_player}
+        """)
+
+        con.commit()
+
+        con.close()
+
 
     def run(self):
         while True: # Главный цикл
@@ -65,7 +79,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         if self.main_menu.choosing_level:
-                            self.level_index = self.main_menu.continue_game()
+                            self.level_index, self.curr_player = self.main_menu.continue_game()
                             self.curr_level = Level(*self.levels[self.level_index])
                             self.start_game = True
                         self.main_menu.mouse_click(event.pos)
@@ -87,6 +101,7 @@ class Game:
                     if game_result[1] == 'win':
                         self.level_index += 1
                     self.curr_level = Level(*self.levels[self.level_index])
+                    # self.save_game(self.curr_level, self.curr_level.kills, )
             else:
                 self.main_menu.show()
 

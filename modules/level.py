@@ -8,6 +8,7 @@ from modules.support import *
 from modules.ui import UI
 from modules.enemy import Enemy
 from modules.comment import Comment
+import datetime
 
 
 class Level:
@@ -35,10 +36,8 @@ class Level:
         self.comments = []  # [Comment((500, 500), "Hello, world!")]
 
         # statistics
-        self.deaths = 0
         self.kills = 0
-        self.game_time = 0
-
+        self.start_level_time = datetime.datetime.now()
 
     def create_map(self, level_name):
         layouts = {

@@ -26,6 +26,7 @@ class MainMenu:
 
         self.menu_music = pygame.mixer.Sound(fixpath('assets/sounds/main_theme.mp3'))
         self.menu_music.play(loops=-1)
+        self.menu_music.set_volume(0.1)
 
 
         # buttons
@@ -42,13 +43,32 @@ class MainMenu:
         self.btn_quit_game = self.font.render("QUIT", True, self.normal_color)
         self.btn_quit_game_rect = self.btn_quit_game.get_rect(center=(half_width, height * 0.5 + 180))
 
+        self.FLAG = False
+
+        self.create_settings_interface()
+
     def show_choose_level(self):
+        con = sqlite3.connect(fixpath("data/database.sqlite"))
+        cur = con.cursor()
+
+        # titles = cur.execute("""SELECT title FROM categories""").fetchall()
+        # cur.execute("""DELETE FROM categories WHERE title = ?""", (title,))
+
+        games = cur.execute(f"""SELECT level FROM Games""").fetchall()
+
+        con.close()
+
+
         width = self.display_surface.get_width()
         height = self.display_surface.get_height()
 
         self.place1 = pygame.image.load(fixpath('assets/images/new_game.png')).convert()
         self.place1_rect = self.place1.get_rect(center=(width * 0.25, height * 0.65))
-        self.place1_text = self.font.render("NEW GAME", True, self.normal_color)
+        if games[0][0] == 0:
+            text = "NEW GAME"
+        else:
+            text = "CONTINUE"
+        self.place1_text = self.font.render(text, True, self.normal_color)
         self.place1_text_rect = self.place1_text.get_rect(center=(width * 0.25, height * 0.52))
         pygame.draw.rect(self.place1, self.normal_color, (0, 0, self.place1_rect.width, self.place1_rect.height), 4)
 
@@ -87,7 +107,7 @@ class MainMenu:
 
         con.close()
 
-        return level
+        return level, 1
 
     def open_settings(self):
         pass
@@ -157,20 +177,31 @@ class MainMenu:
         if top4 <= y <= bottom4 and left4 <= x <= right4:
             self.quit_game()
 
+    def create_settings_interface(self):
+        self.volume = self.font.render("Громкость:", True, 'white')
+        self.volume_rect = self.volume.get_rect(topleft=(500, 300))
+
+        self.plus_volume = self.font.render("+", True, 'white')
+        self.plus_volume_rect = self.plus_volume.get_rect(topleft=(750, 300))
+
 
     def show(self):
         self.display_surface.blit(self.background, self.background.get_rect(topleft=(-350, 0)))
 
-        if self.choosing_level:
-            self.display_surface.blit(self.place1, self.place1_rect)
-            self.display_surface.blit(self.place1_text, self.place1_text_rect)
-            self.display_surface.blit(self.place2, self.place2_rect)
-            self.display_surface.blit(self.place3, self.place3_rect)
-        elif self.in_settings:
-            pass
+        if self.FLAG:
+            self.display_surface.blit(self.volume, self.volume_rect)
+            self.display_surface.blit(self.plus_volume, self.plus_volume_rect)
         else:
-            self.display_surface.blit(self.btn_play, self.btn_play_rect)
-            self.display_surface.blit(self.btn_open_settings, self.btn_open_settings_rect)
-            self.display_surface.blit(self.btn_show_statistics, self.btn_show_statistics_rect)
-            self.display_surface.blit(self.btn_quit_game, self.btn_quit_game_rect)
+            if self.choosing_level:
+                self.display_surface.blit(self.place1, self.place1_rect)
+                self.display_surface.blit(self.place1_text, self.place1_text_rect)
+                self.display_surface.blit(self.place2, self.place2_rect)
+                self.display_surface.blit(self.place3, self.place3_rect)
+            elif self.in_settings:
+                pass
+            else:
+                self.display_surface.blit(self.btn_play, self.btn_play_rect)
+                self.display_surface.blit(self.btn_open_settings, self.btn_open_settings_rect)
+                self.display_surface.blit(self.btn_show_statistics, self.btn_show_statistics_rect)
+                self.display_surface.blit(self.btn_quit_game, self.btn_quit_game_rect)
 

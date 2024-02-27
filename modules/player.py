@@ -48,9 +48,9 @@ class Player(Entity):
 
         self.sounds = {
             # 'idle': pygame.mixer.Sound(fixpath(f'assets/sounds/player/idle.mp3')),
-            # 'move': pygame.mixer.Sound(fixpath(f'assets/sounds/player/move.mp3')),
-            # 'attack': pygame.mixer.Sound(fixpath(f'assets/sounds/player/attack.mp3')),
-            # 'hit': pygame.mixer.Sound(fixpath(f'assets/sounds/player/hit.mp3')),
+            'move': pygame.mixer.Sound(fixpath(f'assets/sounds/player/move.mp3')),
+            'attack': pygame.mixer.Sound(fixpath(f'assets/sounds/player/attack.mp3')),
+            'hit': pygame.mixer.Sound(fixpath(f'assets/sounds/player/hit.mp3')),
             # 'die': pygame.mixer.Sound(fixpath(f'assets/sounds/player/die.mp3')),
         }
 
@@ -145,11 +145,18 @@ class Player(Entity):
             self.create_attack('sword')
             # attack
 
-        if keys[pygame.K_1]:
-            self.attacking = True
-            self.attack_time = pygame.time.get_ticks()
-            self.create_attack('magic')
-            # magic
+        # if keys[pygame.K_1]:
+        #     self.attacking = True
+        #     self.attack_time = pygame.time.get_ticks()
+        #     self.create_attack('magic')
+        #     magic
+
+        # if keys[pygame.K_F1]:
+        #     self.stats = {'health': 10000, 'energy': 10000, 'attack': 10000, 'speed': 4}
+        #     self.health = self.stats['health']
+        #     self.energy = self.stats['energy']
+        #     self.exp = 10000
+        #     self.speed = self.stats['speed']
 
     def get_status(self):
         self.prev_status = self.status
@@ -189,7 +196,17 @@ class Player(Entity):
     def play_sounds(self):
         if self.frame_index == 0:
             try:
-                sound = self.sounds[self.status]
+                if 'idle' in self.status:
+                    sound_name = 'idle'
+                elif 'attack' in self.status:
+                    sound_name = 'attack'
+                elif 'hit' in self.status:
+                    sound_name = 'hit'
+                elif 'die' in self.status:
+                    sound_name = 'die'
+                else:  # move
+                    sound_name = 'move'
+                sound = self.sounds[sound_name]
                 sound.play()
             except KeyError:
                 pass
@@ -232,5 +249,6 @@ class Player(Entity):
         self.input()
         self.cooldowns()
         self.get_status()
+        self.play_sounds()
         self.animate()
         self.move(self.speed)

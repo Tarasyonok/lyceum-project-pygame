@@ -54,7 +54,7 @@ class Enemy(Entity):
         self.died = False
 
         self.vulnerable = True
-        self.hit_time = None
+        self.hit_time = 0
         self.vulnerability_duration = 600
 
         self.damage_player = damage_player
