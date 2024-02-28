@@ -7,8 +7,15 @@ class Opening:
         self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
 
         self.story = [
-            ("Only you Dmitri Sergeevich can save the world", 2000),
-            # ("world", 2000),
+            # ("Kingdom of Elfrieden is the largest in the world.", 500),
+            # ("All energy people use is extracting from magical crystals.", 500),
+            # ("A lot of magical crystals quarried in the dungeon Aincrad.", 500),
+            # ("One day a lot of miners didn't came back from the dungeon.", 500),
+            # ("The survivors said, that they was murdered by monsters.", 500),
+            # ("No one knew where these creatures came from", 500),
+            # ("and none were prepared for there attack.", 500),
+            # ("The King is sending you as the strongest warrior to raid the dungeon.", 500),
+            ("You must kill all monsters.", 2000),
         ]
 
         self.text_color = pygame.color.Color((255, 255, 255))
@@ -84,10 +91,6 @@ class Opening:
             self.curr_text_rect = self.curr_text.get_rect(center=(half_width, half_height))
 
             self.curr_text.set_alpha(0)
-
-
-
-
 
     def end_opening(self):
         curr_time = pygame.time.get_ticks()

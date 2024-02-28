@@ -26,7 +26,6 @@ class Level:
         self.attackable_sprites = pygame.sprite.Group()
 
         # sprite setup
-        self.monsters_left = 0
         self.level_name = level_name
         self.exit_area = exit_area
         self.create_map(level_name)
@@ -77,7 +76,6 @@ class Level:
                                 elif col == 2: monster_name = 'cobra'
                                 elif col == 8: monster_name = 'golem'
                                 else: monster_name = 'slime'
-                                self.monsters_left += 1
                                 # elif col == 12: monster_name = 'cyclop'
                                 # elif col == 13: monster_name = 'minotaur'
                                 Enemy(
@@ -101,8 +99,6 @@ class Level:
         if collision_sprites:
             for target in collision_sprites:
                 target.get_damage(self.player, self.current_attack.attack_type)
-                if target.health <= 0:
-                    self.monsters_left -= 1
 
     def destroy_attack(self):
         if self.current_attack:
@@ -214,7 +210,7 @@ class Level:
     def check_level_end(self):
         if self.player.health <= 0:
             return True, 'lose'
-        if self.monsters_left == 0 and self.player.rect.colliderect(self.exit_area):
+        if len(self.attackable_sprites) == 0 and self.player.rect.colliderect(self.exit_area):
             return True, 'win'
 
         return False, 'still playing'

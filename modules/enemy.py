@@ -61,8 +61,8 @@ class Enemy(Entity):
 
         self.sounds = {
             # 'idle': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/idle.mp3')),
-            'move': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/move.mp3')),
-            'attack': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/attack.mp3')),
+            # 'move': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/move.mp3')),
+            # 'attack': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/attack.mp3')),
             # 'hit': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/hit.mp3')),
             # 'die': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/die.mp3')),
         }
