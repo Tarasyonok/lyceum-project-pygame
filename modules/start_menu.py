@@ -193,7 +193,6 @@ class MainMenu:
         else:
             self.btn_quit_game = self.font.render("QUIT", True, self.normal_color)
 
-
     def mouse_press(self, pos):
         self.mouse_pressed = True
         self.choose_btn_sound.play()

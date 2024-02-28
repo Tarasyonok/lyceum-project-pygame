@@ -8,15 +8,15 @@ class Opening:
         self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
 
         self.story = [
-            # ("Kingdom of Elfrieden is the largest in the world.", 500),
-            # ("All energy people use is extracting from magical crystals.", 500),
-            # ("A lot of magical crystals quarried in the dungeon Aincrad.", 500),
-            # ("One day a lot of miners didn't came back from the dungeon.", 500),
-            # ("The survivors said, that they was murdered by monsters.", 500),
-            # ("No one knew where these creatures came from", 500),
-            # ("and none were prepared for there attack.", 500),
-            # ("The King is sending you as the strongest warrior to raid the dungeon.", 500),
-            ("You must kill all monsters.", 2000),
+            ("Kingdom of Elfrieden is the largest in the world.", 2000),
+            ("All energy people use is extracting from magical crystals.", 2000),
+            ("A lot of magical crystals quarried in the dungeon Aincrad.", 2000),
+            ("One day a lot of miners didn't came back from the dungeon.", 2000),
+            ("The survivors said, that they was murdered by monsters.", 2000),
+            ("No one knew where these creatures came from", 2000),
+            ("and none were prepared for there attack.", 2000),
+            ("The King is sending you as the strongest warrior to raid the dungeon.", 2000),
+            ("You must kill all monsters!", 2000),
         ]
 
         self.text_color = pygame.color.Color((255, 255, 255))
@@ -81,30 +81,30 @@ class Opening:
             self.curr_text.set_alpha(255)
 
         if (
-            0
-            < curr_time
-            - (self.start_curr_text + self.pre_text_delay + self.curr_text_delay)
-            < self.end_text_delay
+                0
+                < curr_time
+                - (self.start_curr_text + self.pre_text_delay + self.curr_text_delay)
+                < self.end_text_delay
         ):
             self.curr_text.set_alpha(
                 255
                 - 255
                 * (
-                    (
-                        curr_time
-                        - self.start_curr_text
-                        - self.pre_text_delay
-                        - self.curr_text_delay
-                    )
-                    / self.end_text_delay
+                        (
+                                curr_time
+                                - self.start_curr_text
+                                - self.pre_text_delay
+                                - self.curr_text_delay
+                        )
+                        / self.end_text_delay
                 )
             )
         elif (
-            curr_time
-            > self.start_curr_text
-            + self.pre_text_delay
-            + self.curr_text_delay
-            + self.end_text_delay
+                curr_time
+                > self.start_curr_text
+                + self.pre_text_delay
+                + self.curr_text_delay
+                + self.end_text_delay
         ):
             self.text_index += 1
             if self.text_index >= len(self.story):
