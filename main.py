@@ -224,7 +224,7 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         if self.curr_level:
                             self.curr_level.show_pause_menu = True
-                            self.show_cursor = True
+                            self.show_cursor 
                         else:
                             self.status = "mainmenu"
                             self.main_menu.choosing_level = None
