@@ -62,8 +62,8 @@ class Enemy(Entity):
 
         self.sounds = {
             # 'idle': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/idle.mp3')),
-            # 'move': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/move.mp3')),
-            # 'attack': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/attack.mp3')),
+            'move': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/move.mp3')),
+            'attack': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/attack.mp3')),
             # 'hit': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/hit.mp3')),
             # 'die': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/die.mp3')),
         }
@@ -149,8 +149,8 @@ class Enemy(Entity):
     def play_sounds(self):
         if self.frame_index == 0:
             try:
-                sound = self.sounds[self.status]
-                sound.play()
+                self.sound = self.sounds[self.status]
+                self.sound.play()
             except KeyError:
                 pass
 
@@ -187,6 +187,7 @@ class Enemy(Entity):
 
         if self.died:
             self.kill()
+            self.sound.stop()
 
     def cooldown(self):
         current_time = pygame.time.get_ticks()

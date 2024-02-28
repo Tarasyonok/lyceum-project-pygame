@@ -19,9 +19,16 @@ class MainMenu:
         half_width = self.display_surface.get_width() // 2
         height = self.display_surface.get_height()
 
+        self.logo_text = pygame.image.load(
+            fixpath("assets/images/logo_text.png")
+        ).convert_alpha()
+        self.logo_text_rect = self.logo_text.get_rect(
+            center=(half_width, height * 0.25)
+        )
+
         self.normal_color = pygame.color.Color((255, 255, 255))
-        self.hover_color = pygame.color.Color((210, 210, 210))
-        self.active_color = pygame.color.Color((150, 50, 50))
+        self.hover_color = pygame.color.Color((180, 180, 180))
+        self.active_color = pygame.color.Color((150, 100, 100))
 
         self.mouse_pressed = False
         self.choosing_level = None
@@ -34,26 +41,21 @@ class MainMenu:
         # buttons
 
         self.btn_play = self.font.render("PLAY", True, self.normal_color)
-        self.btn_play_rect = self.btn_play.get_rect(center=(half_width, height * 0.5))
+        self.btn_play_rect = self.btn_play.get_rect(center=(half_width, height * 0.6))
 
         self.btn_open_settings = self.font.render(
             "OPEN SETTINGS", True, self.normal_color
         )
         self.btn_open_settings_rect = self.btn_open_settings.get_rect(
-            center=(half_width, height * 0.5 + 60)
+            center=(half_width, height * 0.6 + 60)
         )
-
-        self.btn_show_statistics = self.font.render(
-            "SHOW STATISTICS", True, self.normal_color
-        )
-        self.btn_show_statistics_rect = self.btn_show_statistics.get_rect(
-            center=(half_width, height * 0.5 + 120)
-        )
-
         self.btn_quit_game = self.font.render("QUIT", True, self.normal_color)
         self.btn_quit_game_rect = self.btn_quit_game.get_rect(
-            center=(half_width, height * 0.5 + 180)
+            center=(half_width, height * 0.6 + 120)
         )
+
+        self.choose_btn_sound = pygame.mixer.Sound(fixpath(f'assets/sounds/interface/hover.mp3'))
+        self.choose_btn_sound_is_playing = False
 
         self.create_settings_interface()
 
@@ -161,12 +163,6 @@ class MainMenu:
         self.choosing_level = False
         return level
 
-    def open_settings(self):
-        pass
-
-    def show_statistics(self):
-        pass
-
     def quit_game(self):
         pygame.quit()
         sys.exit()
@@ -178,29 +174,29 @@ class MainMenu:
         else:
             color = self.hover_color
 
+        is_btn_hovered = False
         if self.mouse_check(self.btn_play_rect, pos):
             self.btn_play = self.font.render("PLAY", True, color)
+            is_btn_hovered = True
         else:
             self.btn_play = self.font.render("PLAY", True, self.normal_color)
         if self.mouse_check(self.btn_open_settings_rect, pos):
             self.btn_open_settings = self.font.render("OPEN SETTINGS", True, color)
+            is_btn_hovered = True
         else:
             self.btn_open_settings = self.font.render(
                 "OPEN SETTINGS", True, self.normal_color
             )
-        if self.mouse_check(self.btn_show_statistics_rect, pos):
-            self.btn_show_statistics = self.font.render("SHOW STATISTICS", True, color)
-        else:
-            self.btn_show_statistics = self.font.render(
-                "SHOW STATISTICS", True, self.normal_color
-            )
         if self.mouse_check(self.btn_quit_game_rect, pos):
             self.btn_quit_game = self.font.render("QUIT", True, color)
+            is_btn_hovered = True
         else:
             self.btn_quit_game = self.font.render("QUIT", True, self.normal_color)
 
+
     def mouse_press(self, pos):
         self.mouse_pressed = True
+        self.choose_btn_sound.play()
         self.mouse_hover(pos)
 
     def mouse_check(self, rect, pos):
@@ -223,10 +219,6 @@ class MainMenu:
             if self.mouse_check(self.btn_open_settings_rect, pos):
                 self.btn_open_settings = self.font.render("OPEN SETTINGS", True, color)
                 self.in_settings = True
-            if self.mouse_check(self.btn_show_statistics_rect, pos):
-                self.btn_show_statistics = self.font.render(
-                    "SHOW STATISTICS", True, color
-                )
             if self.mouse_check(self.btn_quit_game_rect, pos):
                 self.quit_game()
 
@@ -239,16 +231,17 @@ class MainMenu:
             return 3, self.text3
 
     def create_settings_interface(self):
-        x, y = self.display_surface.get_size()
+        width, height = self.display_surface.get_size()
         self.volume = self.font.render("Will be added soon", True, "white")
         self.volume_rect = self.volume.get_rect(
-            bottomleft=((x - self.volume.get_rect().width) // 2, y // 2)
+            center=(width * 0.5, height * 0.6)
         )
 
     def show(self):
         self.display_surface.blit(
             self.background, self.background.get_rect(topleft=(-350, 0))
         )
+        self.display_surface.blit(self.logo_text, self.logo_text_rect)
 
         if self.in_settings:
             self.display_surface.blit(self.volume, self.volume_rect)
@@ -263,8 +256,5 @@ class MainMenu:
             self.display_surface.blit(self.btn_play, self.btn_play_rect)
             self.display_surface.blit(
                 self.btn_open_settings, self.btn_open_settings_rect
-            )
-            self.display_surface.blit(
-                self.btn_show_statistics, self.btn_show_statistics_rect
             )
             self.display_surface.blit(self.btn_quit_game, self.btn_quit_game_rect)

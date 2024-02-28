@@ -37,34 +37,52 @@ class Level:
         # statistics
         self.kills = 0
         self.start_level_time = datetime.datetime.now()
+        self.set_pause_menu()
+        self.show_pause_menu = False
 
-    def show_pause_menu(self):
+    def set_pause_menu(self):
         width = self.display_surface.get_width()
         height = self.display_surface.get_height()
 
-        self.black_time = 500
-        self.normal_time = 500
-        self.pause_overlay = pygame.surface.Surface((width, height * 0.3))
+        font = pygame.font.Font(UI_FONT, 30)
+
+        self.pause_overlay = pygame.surface.Surface((width * 0.3, height))
         self.pause_overlay_rect = self.pause_overlay.get_rect(topleft=(0, 0))
-        pygame.draw.rect(self.pause_overlay, pygame.color.Color((0, 0, 0)), self.pause_overlay_rect)
+        pygame.draw.rect(
+            self.pause_overlay, pygame.color.Color((0, 0, 0)), self.pause_overlay_rect
+        )
         self.pause_overlay.set_alpha(0)
 
-        self.start_normal = None
-        self.start_black = None
-        # self.start_normal = pygame.time.get_ticks()
-        # self.start_black = pygame.time.get_ticks()
+        self.back_to_game = font.render("back to game", True, pygame.color.Color((255, 255, 255)))
+        self.back_to_game_rect = self.back_to_game.get_rect(center=(width * 0.15, height * 0.3))
 
-        self.normal_color = pygame.color.Color((255, 255, 255))
-        self.hover_color = pygame.color.Color((210, 210, 210))
-        self.active_color = pygame.color.Color((150, 50, 50))
+        self.return_to_menu = font.render("return to main menu", True, pygame.color.Color((255, 255, 255)))
+        self.return_to_menu_rect = self.return_to_menu.get_rect(center=(width * 0.15, height * 0.4))
+
+        # self.normal_color = pygame.color.Color((255, 255, 255))
+        # self.hover_color = pygame.color.Color((210, 210, 210))
+        # self.active_color = pygame.color.Color((150, 50, 50))
+
+    def input(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            self.pause_overlay.set_alpha(200)
+            self.show_pause_menu = True
+            self.player.block_keybord = True
 
     def create_map(self, level_name):
         layouts = {
-            'stop': import_csv_layout(fixpath(f'levels/{level_name}/map_Stop.csv')),
-            'detail': import_csv_layout(fixpath(f'levels/{level_name}/map_Details.csv')),
-            'wall': import_csv_layout(fixpath(f'levels/{level_name}/map_Walls.csv')),
-            'object': import_csv_layout(fixpath(f'levels/{level_name}/map_Objects.csv')),
-            'entities': import_csv_layout(fixpath(f'levels/{level_name}/map_Entities.csv')),
+            "stop": import_csv_layout(fixpath(f"levels/{level_name}/map_Stop.csv")),
+            "detail": import_csv_layout(
+                fixpath(f"levels/{level_name}/map_Details.csv")
+            ),
+            "wall": import_csv_layout(fixpath(f"levels/{level_name}/map_Walls.csv")),
+            "object": import_csv_layout(
+                fixpath(f"levels/{level_name}/map_Objects.csv")
+            ),
+            "entities": import_csv_layout(
+                fixpath(f"levels/{level_name}/map_Entities.csv")
+            ),
         }
 
         for style, layout in layouts.items():
@@ -74,48 +92,64 @@ class Level:
                     if col != -1:
                         x = col_index * TILESIZE
                         y = row_index * TILESIZE
-                        if style == 'stop':
+                        if style == "stop":
                             self.create_stop_blocks(col, x, y)
-                        if style == 'wall':
-                            Tile((x, y), [self.visible_sprites], 'wall', crop_tile(style, col))
+                        if style == "wall":
+                            Tile(
+                                (x, y),
+                                [self.visible_sprites],
+                                "wall",
+                                crop_tile(style, col),
+                            )
                         # if style == 'detail':
                         #     Tile((x, y), [self.visible_sprites], 'detail', crop_tile(style, col))
-                        if style == 'object':
-                            Tile((x, y), [self.visible_sprites], 'object', crop_tile(style, col))
-                        if style == 'entities':
+                        if style == "object":
+                            Tile(
+                                (x, y),
+                                [self.visible_sprites],
+                                "object",
+                                crop_tile(style, col),
+                            )
+                        if style == "entities":
                             if col == 0:
                                 self.player = Player(
                                     (x, y),
                                     [self.visible_sprites],
                                     self.obstacle_sprites,
                                     self.create_attack,
-                                    self.destroy_attack
+                                    self.destroy_attack,
                                 )
                             else:
-                                if col == 1: monster_name = 'slime'
-                                elif col == 2: monster_name = 'cobra'
-                                elif col == 8: monster_name = 'golem'
-                                else: monster_name = 'slime'
+                                if col == 1:
+                                    monster_name = "slime"
+                                elif col == 2:
+                                    monster_name = "cobra"
+                                elif col == 8:
+                                    monster_name = "golem"
+                                else:
+                                    monster_name = "slime"
                                 # elif col == 12: monster_name = 'cyclop'
                                 # elif col == 13: monster_name = 'minotaur'
                                 Enemy(
                                     monster_name,
-                                    (x,y),
+                                    (x, y),
                                     [self.visible_sprites, self.attackable_sprites],
                                     self.obstacle_sprites,
                                     self.damage_player,
                                 )
-                            
-
 
         # 		if col == 'b':
         # 			Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
         # 		if col == 'p':
         # 			self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites)
-        
+
     def create_attack(self, attack_type):
-        self.current_attack = Attack(self.player, [self.visible_sprites, self.attack_sprites], attack_type)
-        collision_sprites = pygame.sprite.spritecollide(self.current_attack,self.attackable_sprites,False)
+        self.current_attack = Attack(
+            self.player, [self.visible_sprites, self.attack_sprites], attack_type
+        )
+        collision_sprites = pygame.sprite.spritecollide(
+            self.current_attack, self.attackable_sprites, False
+        )
         if collision_sprites:
             for target in collision_sprites:
                 target.get_damage(self.player, self.current_attack.attack_type)
@@ -127,53 +161,36 @@ class Level:
 
     def player_attack_logic(self):
         if self.current_attack:
-            collision_sprites = pygame.sprite.spritecollide(self.current_attack, self.attackable_sprites,False)
+            collision_sprites = pygame.sprite.spritecollide(
+                self.current_attack, self.attackable_sprites, False
+            )
             if collision_sprites:
                 for target_sprite in collision_sprites:
-                    target_sprite.get_damage(self.player, 'sword')
+                    target_sprite.get_damage(self.player, "sword")
 
     def damage_player(self, amount):
         if self.player.vulnerable:
             self.player.health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
-            if 'hit' not in self.player.status:
-                self.player.status = self.player.status.split('_')[0] + '_hit'
+            if "hit" not in self.player.status:
+                self.player.status = self.player.status.split("_")[0] + "_hit"
                 self.player.frame_index = 0
 
     def create_stop_blocks(self, col, x, y):
         positions = []
         if col == 0:
-            positions = [
-                [x, y],
-                [x + 16, y],
-                [x, y + 16],
-                [x + 16, y + 16]
-            ]
+            positions = [[x, y], [x + 16, y], [x, y + 16], [x + 16, y + 16]]
         elif col == 1:
             positions = []
         elif col == 2:
-            positions = [
-                [x + 16, y],
-                [x, y + 16]
-            ]
+            positions = [[x + 16, y], [x, y + 16]]
         elif col == 3:
-            positions = [
-                [x, y],
-                [x + 16, y + 16]
-            ]
+            positions = [[x, y], [x + 16, y + 16]]
         elif col == 4:
-            positions = [
-                [x + 16, y],
-                [x, y + 16],
-                [x + 16, y + 16]
-            ]
+            positions = [[x + 16, y], [x, y + 16], [x + 16, y + 16]]
         elif col == 5:
-            positions = [
-                [x, y],
-                [x, y + 16],
-                [x + 16, y + 16]
-            ]
+            positions = [[x, y], [x, y + 16], [x + 16, y + 16]]
         elif col == 6:
             positions = [
                 [x, y],
@@ -181,64 +198,47 @@ class Level:
                 [x, y + 16],
             ]
         elif col == 7:
-            positions = [
-                [x, y],
-                [x + 16, y],
-                [x + 16, y + 16]
-            ]
+            positions = [[x, y], [x + 16, y], [x + 16, y + 16]]
         elif col == 8:
-            positions = [
-                [x, y]
-            ]
+            positions = [[x, y]]
         elif col == 9:
-            positions = [
-                [x + 16, y]
-            ]
+            positions = [[x + 16, y]]
         elif col == 10:
-            positions = [
-                [x, y]
-            ]
+            positions = [[x, y]]
         elif col == 11:
-            positions = [
-                [x, y + 16]
-            ]
+            positions = [[x, y + 16]]
         elif col == 12:
-            positions = [
-                [x, y],
-                [x + 16, y]
-            ]
+            positions = [[x, y], [x + 16, y]]
         elif col == 13:
-            positions = [
-                [x, y + 16],
-                [x + 16, y + 16]
-            ]
+            positions = [[x, y + 16], [x + 16, y + 16]]
         elif col == 14:
-            positions = [
-                [x, y],
-                [x, y + 16]
-            ]
+            positions = [[x, y], [x, y + 16]]
         elif col == 15:
-            positions = [
-                [x + 16, y],
-                [x + 16, y + 16]
-            ]
+            positions = [[x + 16, y], [x + 16, y + 16]]
 
         for pos in positions:
-            t = Tile(pos, [self.obstacle_sprites, self.visible_sprites], 'stop', pygame.Surface((16, 16), pygame.SRCALPHA, 32))
+            t = Tile(
+                pos,
+                [self.obstacle_sprites, self.visible_sprites],
+                "stop",
+                pygame.Surface((16, 16), pygame.SRCALPHA, 32),
+            )
             # t.image.fill('red')
 
     def check_level_end(self):
         if self.player.health <= 0:
-            return True, 'lose'
-        if len(self.attackable_sprites) == 0 and self.player.rect.colliderect(self.exit_area):
-            return True, 'win'
+            return True, "lose"
+        if len(self.attackable_sprites) == 0 and self.player.rect.colliderect(
+            self.exit_area
+        ):
+            return True, "win"
 
-        return False, 'still playing'
+        return False, "still playing"
 
     def display_text(self, texts, delta):
-        if 'start_time' not in self.__dict__:
+        if "start_time" not in self.__dict__:
             self.start_time = pygame.time.get_ticks()
-        if 'counter' not in self.__dict__:
+        if "counter" not in self.__dict__:
             self.counter = 0
         if self.counter >= len(texts):
             return
@@ -249,14 +249,18 @@ class Level:
             self.start_time = pygame.time.get_ticks()
 
         text = texts[self.counter]
-        font = pygame.font.Font('assets/fonts/joystix.ttf', 22)
+        font = pygame.font.Font("assets/fonts/joystix.ttf", 22)
         x, y = self.display_surface.get_size()
 
         self.text = font.render(text, False, TEXT_COLOR)
-        self.rect = self.text.get_rect(bottomleft=((x - self.text.get_rect().width) // 2, y - 50))
+        self.rect = self.text.get_rect(
+            bottomleft=((x - self.text.get_rect().width) // 2, y - 50)
+        )
         pygame.draw.rect(self.display_surface, UI_BG_COLOR, self.rect.inflate(20, 20))
         self.display_surface.blit(self.text, self.rect)
-        pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, self.rect.inflate(20, 20), 3)
+        pygame.draw.rect(
+            self.display_surface, UI_BORDER_COLOR, self.rect.inflate(20, 20), 3
+        )
 
     def run(self):
         # update and draw the game
@@ -264,10 +268,22 @@ class Level:
         self.visible_sprites.update()
         self.visible_sprites.enemy_update(self.player)
         self.player_attack_logic()
-        self.display_text(['WELCOME, DMITRY SERGEEVICH!', '[W][A][S][D] IS YOUR MOVEMENT', '[SPACE] IS YOUR ATTACK'], 3000)
+        self.input()
+        # self.display_text(
+        #     [
+        #         "WELCOME, DMITRY SERGEEVICH!",
+        #         "[W][A][S][D] IS YOUR MOVEMENT",
+        #         "[SPACE] IS YOUR ATTACK",
+        #     ],
+        #     3000,
+        # )
         self.ui.display(self.player)
         for comment in self.comments:
             comment.show()
+        if self.show_pause_menu:
+            self.display_surface.blit(self.pause_overlay, self.pause_overlay_rect)
+            self.display_surface.blit(self.back_to_game, self.back_to_game_rect)
+            self.display_surface.blit(self.return_to_menu, self.return_to_menu_rect)
         # print(self.check_level_end(), self.player.rect, self.exit_area, self.player.rect.colliderect(self.exit_area))
 
 
@@ -279,23 +295,34 @@ class CameraGroup(pygame.sprite.Group):
         self.half_height = self.display_surface.get_height() // 2
         self.offset = [0, 0]
 
-        self.floor_surf = pygame.image.load(fixpath(f'levels/{level_name}/Floor.png')).convert()
+        self.floor_surf = pygame.image.load(
+            fixpath(f"levels/{level_name}/Floor.png")
+        ).convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):
         self.offset[0] = player.rect.centerx - self.half_width
         self.offset[1] = player.rect.centery - self.half_height
 
-        floor_offset_pos = [self.floor_rect.left - self.offset[0], self.floor_rect.top - self.offset[1]]
+        floor_offset_pos = [
+            self.floor_rect.left - self.offset[0],
+            self.floor_rect.top - self.offset[1],
+        ]
         self.display_surface.blit(self.floor_surf, floor_offset_pos)
 
         # for sprite in self.sprites():
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            offset_pos = [sprite.rect.left - self.offset[0], sprite.rect.top - self.offset[1]]
+            offset_pos = [
+                sprite.rect.left - self.offset[0],
+                sprite.rect.top - self.offset[1],
+            ]
             self.display_surface.blit(sprite.image, offset_pos)
 
-
     def enemy_update(self, player):
-        enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
+        enemy_sprites = [
+            sprite
+            for sprite in self.sprites()
+            if hasattr(sprite, "sprite_type") and sprite.sprite_type == "enemy"
+        ]
         for spite in enemy_sprites:
             spite.enemy_update(player)

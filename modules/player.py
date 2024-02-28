@@ -36,7 +36,7 @@ class Player(Entity):
 
         self.obstacle_sprites = obstacle_sprites
 
-        self.stats = {"health": 100, "energy": 60, "attack": 10, "speed": 4}
+        self.stats = {"health": 100, "energy": 60, "attack": 50, "speed": 4}
         self.health = self.stats["health"]
         self.energy = self.stats["energy"]
         self.exp = 123
@@ -56,7 +56,9 @@ class Player(Entity):
             "hit": pygame.mixer.Sound(fixpath(f"assets/sounds/player/hit.mp3")),
             # 'die': pygame.mixer.Sound(fixpath(f'assets/sounds/player/die.mp3')),
         }
+
         self.play_sound = False
+        self.block_keybord = False
 
     def import_player_assets(self):
         self.pathes = {
@@ -129,6 +131,8 @@ class Player(Entity):
                 )
 
     def input(self):
+        if self.block_keybord:
+            return
         if self.attacking:
             return
         if self.status == "hit" or self.status == "die":

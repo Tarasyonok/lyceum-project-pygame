@@ -46,10 +46,12 @@ class Game:
             ("prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
         ]
 
+        self.curr_level = None
+
         self.swith_to_new_level = False
 
         self.status = "mainmenu"
-        # statuses: mainmenu, opening, playing, statistics, choosing
+        # statuses: mainmenu, opening, playing, statistics, choosing, settings
 
         self.display_surface = pygame.display.get_surface()
         self.set_black_overlay()
@@ -66,6 +68,7 @@ class Game:
         ).convert_alpha()
         self.cursor = self.normal_cursor
         self.cursor_rect = None
+        self.show_cursor = True
 
     def set_back_to_main_menu(self):
         width = self.display_surface.get_width()
@@ -147,7 +150,6 @@ class Game:
         deaths += is_died
 
         print(level, kills, deaths, time)
-        level = kills = deaths = 0
         cur.execute(
             f"""
         UPDATE Games SET level={level}, kills={kills}, deaths={deaths}, time={time}
@@ -178,14 +180,27 @@ class Game:
                     if event.button == 1:
                         self.main_menu.mouse_press(event.pos)
                 if event.type == pygame.MOUSEBUTTONUP:
+                    self.cursor = self.normal_cursor
+                    if self.curr_level and self.curr_level.show_pause_menu:
+                        if self.mouse_check(self.curr_level.back_to_game_rect, event.pos):
+                            self.curr_level.show_pause_menu = False
+                            self.curr_level.player.block_keybord = False
+                            self.show_cursor = False
+                        elif self.mouse_check(self.curr_level.return_to_menu_rect, event.pos):
+                            self.curr_level = None
+                            self.status = "mainmenu"
+                            self.main_menu.choosing_level = None
+                        continue
                     if self.mouse_check(self.btn_back_to_main_menu_rect, event.pos):
                         self.status = "mainmenu"
                         self.main_menu.choosing_level = None
-                    self.cursor = self.normal_cursor
+                        self.main_menu.in_settings = None
+                        self.show_cursor = True
                     if event.button == 1:
                         if self.main_menu.choosing_level:
                             click_info = self.main_menu.mouse_choosing_click(event.pos)
                             if click_info:
+                                self.show_cursor = False
                                 self.game_id, text = click_info
                                 self.curr_player = self.game_id
                                 if text == "NEW GAME":
@@ -202,6 +217,16 @@ class Game:
                                     self.want_status = "playing"
                         else:
                             self.main_menu.mouse_click(event.pos)
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        if self.curr_level:
+                            self.curr_level.show_pause_menu = True
+                            self.show_cursor = True
+                        else:
+                            self.status = "mainmenu"
+                            self.main_menu.choosing_level = None
+                            self.main_menu.in_settings = None
 
             if self.status == "mainmenu":
                 self.main_menu.show()
@@ -245,7 +270,7 @@ class Game:
                     self.btn_back_to_main_menu, self.btn_back_to_main_menu_rect
                 )
 
-            if self.main_menu.choosing_level:
+            if self.main_menu.choosing_level or self.main_menu.in_settings:
                 self.display_surface.blit(
                     self.btn_back_to_main_menu, self.btn_back_to_main_menu_rect
                 )
@@ -255,7 +280,7 @@ class Game:
             if self.start_normal:
                 self.end_black_overlay()
             self.display_surface.blit(self.black_overlay, self.black_overlay_rect)
-            if self.cursor_rect:
+            if self.cursor_rect and self.show_cursor:
                 self.display_surface.blit(self.cursor, self.cursor_rect)
 
             pygame.display.update()  # обновляем экран, а то просто чёрное всё будет
