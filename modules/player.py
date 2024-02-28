@@ -53,6 +53,7 @@ class Player(Entity):
             'hit': pygame.mixer.Sound(fixpath(f'assets/sounds/player/hit.mp3')),
             # 'die': pygame.mixer.Sound(fixpath(f'assets/sounds/player/die.mp3')),
         }
+        self.play_sound = False
 
 
     def import_player_assets(self):
@@ -206,8 +207,9 @@ class Player(Entity):
                     sound_name = 'die'
                 else:  # move
                     sound_name = 'move'
-                sound = self.sounds[sound_name]
-                sound.play()
+                self.sound.stop()
+                self.sound = self.sounds[sound_name]
+                self.sound.play()
             except KeyError:
                 pass
 

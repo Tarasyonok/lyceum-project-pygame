@@ -7,7 +7,7 @@ from modules.support import *
 import sqlite3
 
 class Statistics:
-    def __init__(self):
+    def __init__(self, player_id):
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
 
@@ -35,6 +35,14 @@ class Statistics:
 
         self.deaths_text = self.font.render("DEATHS", True, self.normal_color)
         self.deaths_text_rect = self.deaths_text.get_rect(center=(half_width, height * 0.5 + 60))
+
+        con = sqlite3.connect("data/database.sqlite")
+        cur = con.cursor()
+
+        kills, deaths = cur.execute(f"""
+        SELECT kills, deaths WHERE
+        id = {player_id}
+        """).fetchone()
 
         self.kills_num_text = self.font.render("xxx", True, self.normal_color)
         self.kills_num_text_rect = self.kills_num_text.get_rect(center=(half_width, height * 0.5 + 120))

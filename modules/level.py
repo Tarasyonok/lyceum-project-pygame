@@ -38,6 +38,26 @@ class Level:
         self.kills = 0
         self.start_level_time = datetime.datetime.now()
 
+    def show_pause_menu(self):
+        width = self.display_surface.get_width()
+        height = self.display_surface.get_height()
+
+        self.black_time = 500
+        self.normal_time = 500
+        self.pause_overlay = pygame.surface.Surface((width, height * 0.3))
+        self.pause_overlay_rect = self.pause_overlay.get_rect(topleft=(0, 0))
+        pygame.draw.rect(self.pause_overlay, pygame.color.Color((0, 0, 0)), self.pause_overlay_rect)
+        self.pause_overlay.set_alpha(0)
+
+        self.start_normal = None
+        self.start_black = None
+        # self.start_normal = pygame.time.get_ticks()
+        # self.start_black = pygame.time.get_ticks()
+
+        self.normal_color = pygame.color.Color((255, 255, 255))
+        self.hover_color = pygame.color.Color((210, 210, 210))
+        self.active_color = pygame.color.Color((150, 50, 50))
+
     def create_map(self, level_name):
         layouts = {
             'stop': import_csv_layout(fixpath(f'levels/{level_name}/map_Stop.csv')),

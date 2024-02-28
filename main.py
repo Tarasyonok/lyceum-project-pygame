@@ -206,7 +206,7 @@ class Game:
                         self.level_index += 1
                     if self.level_index >= len(self.levels):
                         self.status = "statistics"
-                        self.statistics = Statistics()
+                        self.statistics = Statistics(self.curr_player)
                         self.curr_level = None
                     else:
                         self.curr_level = Level(*self.levels[self.level_index])
