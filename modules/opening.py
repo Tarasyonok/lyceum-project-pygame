@@ -1,6 +1,7 @@
 import pygame
 from modules.settings import *
 
+
 class Opening:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
@@ -25,10 +26,14 @@ class Opening:
 
         self.background = pygame.surface.Surface((width, height))
         self.background_rect = self.background.get_rect(topleft=(0, 0))
-        pygame.draw.rect(self.background, pygame.color.Color((0, 0, 0)), self.background_rect)
+        pygame.draw.rect(
+            self.background, pygame.color.Color((0, 0, 0)), self.background_rect
+        )
 
         self.curr_text = self.font.render("", True, self.text_color)
-        self.curr_text_rect = self.curr_text.get_rect(center=(width * 0.5, height * 0.5))
+        self.curr_text_rect = self.curr_text.get_rect(
+            center=(width * 0.5, height * 0.5)
+        )
 
         self.start_black = pygame.time.get_ticks()
         self.black_time = 1000
@@ -39,12 +44,12 @@ class Opening:
 
         self.text_index = 0
 
-
-
     def start_opening(self):
         curr_time = pygame.time.get_ticks()
         if curr_time < self.start_black + self.black_time:
-            self.background.set_alpha(255 * ((curr_time - self.start_black) / self.black_time))
+            self.background.set_alpha(
+                255 * ((curr_time - self.start_black) / self.black_time)
+            )
         else:
             self.background.set_alpha(255)
             self.start_opening_flag = False
@@ -57,22 +62,50 @@ class Opening:
             half_width = self.display_surface.get_width() // 2
             half_height = self.display_surface.get_height() // 2
 
-            self.curr_text = self.font.render(self.story[self.text_index][0], True, self.text_color)
-            self.curr_text_rect = self.curr_text.get_rect(center=(half_width, half_height))
+            self.curr_text = self.font.render(
+                self.story[self.text_index][0], True, self.text_color
+            )
+            self.curr_text_rect = self.curr_text.get_rect(
+                center=(half_width, half_height)
+            )
 
             self.curr_text.set_alpha(0)
-
 
     def tell_story(self):
         curr_time = pygame.time.get_ticks()
         if curr_time < self.start_curr_text + self.pre_text_delay:
-            self.curr_text.set_alpha(255 * ((curr_time - self.start_curr_text) / self.pre_text_delay))
+            self.curr_text.set_alpha(
+                255 * ((curr_time - self.start_curr_text) / self.pre_text_delay)
+            )
         else:
             self.curr_text.set_alpha(255)
 
-        if 0 < curr_time - (self.start_curr_text + self.pre_text_delay + self.curr_text_delay) < self.end_text_delay:
-            self.curr_text.set_alpha(255 - 255 * ((curr_time - self.start_curr_text - self.pre_text_delay - self.curr_text_delay) / self.end_text_delay))
-        elif curr_time > self.start_curr_text + self.pre_text_delay + self.curr_text_delay + self.end_text_delay:
+        if (
+            0
+            < curr_time
+            - (self.start_curr_text + self.pre_text_delay + self.curr_text_delay)
+            < self.end_text_delay
+        ):
+            self.curr_text.set_alpha(
+                255
+                - 255
+                * (
+                    (
+                        curr_time
+                        - self.start_curr_text
+                        - self.pre_text_delay
+                        - self.curr_text_delay
+                    )
+                    / self.end_text_delay
+                )
+            )
+        elif (
+            curr_time
+            > self.start_curr_text
+            + self.pre_text_delay
+            + self.curr_text_delay
+            + self.end_text_delay
+        ):
             self.text_index += 1
             if self.text_index >= len(self.story):
                 self.tell_story_flag = False
@@ -87,15 +120,21 @@ class Opening:
             self.start_curr_text = pygame.time.get_ticks()
             self.curr_text_delay = self.story[self.text_index][1]
 
-            self.curr_text = self.font.render(self.story[self.text_index][0], True, self.text_color)
-            self.curr_text_rect = self.curr_text.get_rect(center=(half_width, half_height))
+            self.curr_text = self.font.render(
+                self.story[self.text_index][0], True, self.text_color
+            )
+            self.curr_text_rect = self.curr_text.get_rect(
+                center=(half_width, half_height)
+            )
 
             self.curr_text.set_alpha(0)
 
     def end_opening(self):
         curr_time = pygame.time.get_ticks()
         if curr_time < self.start_normal + self.normal_time:
-            self.background.set_alpha(255 - 255 * ((curr_time - self.start_normal) / self.normal_time))
+            self.background.set_alpha(
+                255 - 255 * ((curr_time - self.start_normal) / self.normal_time)
+            )
         else:
             self.background.set_alpha(0)
             self.curr_text.set_alpha(0)

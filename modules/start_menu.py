@@ -6,12 +6,15 @@ from modules.support import *
 
 import sqlite3
 
+
 class MainMenu:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
 
-        self.background = pygame.image.load(fixpath('assets/images/main_menu.jpg')).convert()
+        self.background = pygame.image.load(
+            fixpath("assets/images/main_menu.jpg")
+        ).convert()
 
         half_width = self.display_surface.get_width() // 2
         height = self.display_surface.get_height()
@@ -24,24 +27,33 @@ class MainMenu:
         self.choosing_level = None
         self.in_settings = False
 
-        self.menu_music = pygame.mixer.Sound(fixpath('assets/sounds/main_theme.mp3'))
+        self.menu_music = pygame.mixer.Sound(fixpath("assets/sounds/main_theme.mp3"))
         self.menu_music.play(loops=-1)
         self.menu_music.set_volume(0.1)
-
 
         # buttons
 
         self.btn_play = self.font.render("PLAY", True, self.normal_color)
         self.btn_play_rect = self.btn_play.get_rect(center=(half_width, height * 0.5))
 
-        self.btn_open_settings = self.font.render("OPEN SETTINGS", True, self.normal_color)
-        self.btn_open_settings_rect = self.btn_open_settings.get_rect(center=(half_width, height * 0.5 + 60))
+        self.btn_open_settings = self.font.render(
+            "OPEN SETTINGS", True, self.normal_color
+        )
+        self.btn_open_settings_rect = self.btn_open_settings.get_rect(
+            center=(half_width, height * 0.5 + 60)
+        )
 
-        self.btn_show_statistics = self.font.render("SHOW STATISTICS", True, self.normal_color)
-        self.btn_show_statistics_rect = self.btn_show_statistics.get_rect(center=(half_width, height * 0.5 + 120))
+        self.btn_show_statistics = self.font.render(
+            "SHOW STATISTICS", True, self.normal_color
+        )
+        self.btn_show_statistics_rect = self.btn_show_statistics.get_rect(
+            center=(half_width, height * 0.5 + 120)
+        )
 
         self.btn_quit_game = self.font.render("QUIT", True, self.normal_color)
-        self.btn_quit_game_rect = self.btn_quit_game.get_rect(center=(half_width, height * 0.5 + 180))
+        self.btn_quit_game_rect = self.btn_quit_game.get_rect(
+            center=(half_width, height * 0.5 + 180)
+        )
 
         self.create_settings_interface()
 
@@ -57,39 +69,59 @@ class MainMenu:
 
         con.close()
 
-
         width = self.display_surface.get_width()
         height = self.display_surface.get_height()
 
-        self.place1 = pygame.image.load(fixpath('assets/images/new_game.png')).convert()
+        self.place1 = pygame.image.load(fixpath("assets/images/new_game.png")).convert()
         self.place1_rect = self.place1.get_rect(center=(width * 0.25, height * 0.65))
         if games[0][0] == 0:
             self.text = "NEW GAME"
         else:
             self.text = "CONTINUE"
         self.place1_text = self.font.render(self.text, True, self.normal_color)
-        self.place1_text_rect = self.place1_text.get_rect(center=(width * 0.25, height * 0.52))
-        pygame.draw.rect(self.place1, self.normal_color, (0, 0, self.place1_rect.width, self.place1_rect.height), 4)
+        self.place1_text_rect = self.place1_text.get_rect(
+            center=(width * 0.25, height * 0.52)
+        )
+        pygame.draw.rect(
+            self.place1,
+            self.normal_color,
+            (0, 0, self.place1_rect.width, self.place1_rect.height),
+            4,
+        )
 
-        self.place2 = pygame.image.load(fixpath('assets/images/new_game.png')).convert()
+        self.place2 = pygame.image.load(fixpath("assets/images/new_game.png")).convert()
         self.place2_rect = self.place2.get_rect(center=(width * 0.5, height * 0.65))
         if games[1][0] == 0:
             self.text2 = "NEW GAME"
         else:
             self.text2 = "CONTINUE"
         self.place2_text = self.font.render(self.text2, True, self.normal_color)
-        self.place2_text_rect = self.place2_text.get_rect(center=(width * 0.5, height * 0.52))
-        pygame.draw.rect(self.place2, self.normal_color, (0, 0, self.place2_rect.width, self.place2_rect.height), 4)
+        self.place2_text_rect = self.place2_text.get_rect(
+            center=(width * 0.5, height * 0.52)
+        )
+        pygame.draw.rect(
+            self.place2,
+            self.normal_color,
+            (0, 0, self.place2_rect.width, self.place2_rect.height),
+            4,
+        )
 
-        self.place3 = pygame.image.load(fixpath('assets/images/new_game.png')).convert()
+        self.place3 = pygame.image.load(fixpath("assets/images/new_game.png")).convert()
         self.place3_rect = self.place3.get_rect(center=(width * 0.75, height * 0.65))
         if games[2][0] == 0:
             self.text3 = "NEW GAME"
         else:
             self.text3 = "CONTINUE"
         self.place3_text = self.font.render(self.text3, True, self.normal_color)
-        self.place3_text_rect = self.place3_text.get_rect(center=(width * 0.75, height * 0.52))
-        pygame.draw.rect(self.place3, self.normal_color, (0, 0, self.place3_rect.width, self.place3_rect.height), 4)
+        self.place3_text_rect = self.place3_text.get_rect(
+            center=(width * 0.75, height * 0.52)
+        )
+        pygame.draw.rect(
+            self.place3,
+            self.normal_color,
+            (0, 0, self.place3_rect.width, self.place3_rect.height),
+            4,
+        )
 
     def new_game(self, id):
         con = sqlite3.connect(fixpath("data/database.sqlite"))
@@ -98,10 +130,12 @@ class MainMenu:
         # titles = cur.execute("""SELECT title FROM categories""").fetchall()
         # cur.execute("""DELETE FROM categories WHERE title = ?""", (title,))
 
-        cur.execute(f"""
+        cur.execute(
+            f"""
         UPDATE Games SET level = 1, kills = 0, deaths = 0, time = 0
         WHERE id = {id}
-        """)
+        """
+        )
 
         con.close()
 
@@ -115,10 +149,12 @@ class MainMenu:
         # titles = cur.execute("""SELECT title FROM categories""").fetchall()
         # cur.execute("""DELETE FROM categories WHERE title = ?""", (title,))
 
-        level = cur.execute(f"""
+        level = cur.execute(
+            f"""
         SELECT level FROM Games
         WHERE id = {id}
-        """).fetchone()[0]
+        """
+        ).fetchone()[0]
 
         con.close()
 
@@ -149,11 +185,15 @@ class MainMenu:
         if self.mouse_check(self.btn_open_settings_rect, pos):
             self.btn_open_settings = self.font.render("OPEN SETTINGS", True, color)
         else:
-            self.btn_open_settings = self.font.render("OPEN SETTINGS", True, self.normal_color)
+            self.btn_open_settings = self.font.render(
+                "OPEN SETTINGS", True, self.normal_color
+            )
         if self.mouse_check(self.btn_show_statistics_rect, pos):
             self.btn_show_statistics = self.font.render("SHOW STATISTICS", True, color)
         else:
-            self.btn_show_statistics = self.font.render("SHOW STATISTICS", True, self.normal_color)
+            self.btn_show_statistics = self.font.render(
+                "SHOW STATISTICS", True, self.normal_color
+            )
         if self.mouse_check(self.btn_quit_game_rect, pos):
             self.btn_quit_game = self.font.render("QUIT", True, color)
         else:
@@ -184,7 +224,9 @@ class MainMenu:
                 self.btn_open_settings = self.font.render("OPEN SETTINGS", True, color)
                 self.in_settings = True
             if self.mouse_check(self.btn_show_statistics_rect, pos):
-                self.btn_show_statistics = self.font.render("SHOW STATISTICS", True, color)
+                self.btn_show_statistics = self.font.render(
+                    "SHOW STATISTICS", True, color
+                )
             if self.mouse_check(self.btn_quit_game_rect, pos):
                 self.quit_game()
 
@@ -198,23 +240,31 @@ class MainMenu:
 
     def create_settings_interface(self):
         x, y = self.display_surface.get_size()
-        self.volume = self.font.render("Will be added soon", True, 'white')
-        self.volume_rect = self.volume.get_rect(bottomleft=((x - self.volume.get_rect().width) // 2, y // 2))
+        self.volume = self.font.render("Will be added soon", True, "white")
+        self.volume_rect = self.volume.get_rect(
+            bottomleft=((x - self.volume.get_rect().width) // 2, y // 2)
+        )
 
     def show(self):
-        self.display_surface.blit(self.background, self.background.get_rect(topleft=(-350, 0)))
+        self.display_surface.blit(
+            self.background, self.background.get_rect(topleft=(-350, 0))
+        )
 
         if self.in_settings:
             self.display_surface.blit(self.volume, self.volume_rect)
         elif self.choosing_level:
-                self.display_surface.blit(self.place1, self.place1_rect)
-                self.display_surface.blit(self.place1_text, self.place1_text_rect)
-                self.display_surface.blit(self.place2, self.place2_rect)
-                self.display_surface.blit(self.place2_text, self.place2_text_rect)
-                self.display_surface.blit(self.place3, self.place3_rect)
-                self.display_surface.blit(self.place3_text, self.place3_text_rect)
+            self.display_surface.blit(self.place1, self.place1_rect)
+            self.display_surface.blit(self.place1_text, self.place1_text_rect)
+            self.display_surface.blit(self.place2, self.place2_rect)
+            self.display_surface.blit(self.place2_text, self.place2_text_rect)
+            self.display_surface.blit(self.place3, self.place3_rect)
+            self.display_surface.blit(self.place3_text, self.place3_text_rect)
         else:
             self.display_surface.blit(self.btn_play, self.btn_play_rect)
-            self.display_surface.blit(self.btn_open_settings, self.btn_open_settings_rect)
-            self.display_surface.blit(self.btn_show_statistics, self.btn_show_statistics_rect)
+            self.display_surface.blit(
+                self.btn_open_settings, self.btn_open_settings_rect
+            )
+            self.display_surface.blit(
+                self.btn_show_statistics, self.btn_show_statistics_rect
+            )
             self.display_surface.blit(self.btn_quit_game, self.btn_quit_game_rect)

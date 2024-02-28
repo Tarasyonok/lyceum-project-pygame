@@ -1,4 +1,4 @@
-'''
+"""
 Я сделал комментарии в файлах, чтобы понимать, что где происходит
 main.py запускает игру
 
@@ -11,7 +11,7 @@ main.py запускает игру
 
 Здесь обьяснение, на всякий
 https://proproprogs.ru/modules/chto-takoe-pygame-karkas-prilozheniya-fps
-'''
+"""
 
 import pygame, sys
 from modules.settings import *
@@ -24,14 +24,13 @@ from modules.statistics import Statistics
 import sqlite3
 
 
-
 class Game:
     def __init__(self):
 
         # general setup
         pygame.init()  # инициализируем pygame
         self.screen = pygame.display.set_mode((WIDTH, HEIGTH))  # создаём экран
-        pygame.display.set_caption('Dungeon runner')  # задаём заголовок
+        pygame.display.set_caption("Dungeon runner")  # задаём заголовок
 
         # -------------------------------------
         # Вот тебе задание: выбери и отобрази иконку на окне игры
@@ -43,8 +42,8 @@ class Game:
         self.main_menu = MainMenu()
 
         self.levels = [
-            ('level1', pygame.rect.Rect(0, 0, 10000, 10000)),
-            ('prod2', pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("level1", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
         ]
 
         self.swith_to_new_level = False
@@ -59,8 +58,12 @@ class Game:
 
     def set_cursor(self):
         pygame.mouse.set_visible(False)
-        self.normal_cursor = pygame.image.load(fixpath('assets/images/cursor/normal.png')).convert_alpha()
-        self.active_cursor = pygame.image.load(fixpath('assets/images/cursor/active.png')).convert_alpha()
+        self.normal_cursor = pygame.image.load(
+            fixpath("assets/images/cursor/normal.png")
+        ).convert_alpha()
+        self.active_cursor = pygame.image.load(
+            fixpath("assets/images/cursor/active.png")
+        ).convert_alpha()
         self.cursor = self.normal_cursor
         self.cursor_rect = None
 
@@ -70,7 +73,9 @@ class Game:
 
         font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
         self.btn_back_to_main_menu = font.render("back", True, self.normal_color)
-        self.btn_back_to_main_menu_rect = self.btn_back_to_main_menu.get_rect(bottomleft=(50, height - 30))
+        self.btn_back_to_main_menu_rect = self.btn_back_to_main_menu.get_rect(
+            bottomleft=(50, height - 30)
+        )
 
     def mouse_check(self, rect, pos):
         x, y = pos
@@ -85,7 +90,9 @@ class Game:
         self.normal_time = 500
         self.black_overlay = pygame.surface.Surface((width, height))
         self.black_overlay_rect = self.black_overlay.get_rect(topleft=(0, 0))
-        pygame.draw.rect(self.black_overlay, pygame.color.Color((0, 0, 0)), self.black_overlay_rect)
+        pygame.draw.rect(
+            self.black_overlay, pygame.color.Color((0, 0, 0)), self.black_overlay_rect
+        )
         self.black_overlay.set_alpha(0)
 
         self.start_normal = None
@@ -100,7 +107,9 @@ class Game:
     def start_black_overlay(self):
         curr_time = pygame.time.get_ticks()
         if curr_time < self.start_black + self.black_time:
-            self.black_overlay.set_alpha(255 * ((curr_time - self.start_black) / self.black_time))
+            self.black_overlay.set_alpha(
+                255 * ((curr_time - self.start_black) / self.black_time)
+            )
         else:
             self.black_overlay.set_alpha(255)
             self.start_black = None
@@ -117,7 +126,9 @@ class Game:
     def end_black_overlay(self):
         curr_time = pygame.time.get_ticks()
         if curr_time < self.start_normal + self.normal_time:
-            self.black_overlay.set_alpha(255 - 255 * ((curr_time - self.start_normal) / self.normal_time))
+            self.black_overlay.set_alpha(
+                255 - 255 * ((curr_time - self.start_normal) / self.normal_time)
+            )
         else:
             self.black_overlay.set_alpha(0)
             self.start_normal = None
@@ -126,27 +137,30 @@ class Game:
         con = sqlite3.connect(fixpath("data/database.sqlite"))
         cur = con.cursor()
 
-        deaths = cur.execute(f"""
+        deaths = cur.execute(
+            f"""
         SELECT deaths from Games
         WHERE id = {self.curr_player}
-        """).fetchone()[0]
+        """
+        ).fetchone()[0]
 
         deaths += is_died
 
         print(level, kills, deaths, time)
         level = kills = deaths = 0
-        cur.execute(f"""
+        cur.execute(
+            f"""
         UPDATE Games SET level={level}, kills={kills}, deaths={deaths}, time={time}
         WHERE id = {self.curr_player}
-        """)
+        """
+        )
 
         con.commit()
 
         con.close()
 
-
     def run(self):
-        while True: # Главный цикл
+        while True:  # Главный цикл
             # Здесь выход по нажатию крестика
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -175,8 +189,12 @@ class Game:
                                 self.game_id, text = click_info
                                 self.curr_player = self.game_id
                                 if text == "NEW GAME":
-                                    self.level_index = self.main_menu.new_game(self.game_id)
-                                    self.curr_level = Level(*self.levels[self.level_index])
+                                    self.level_index = self.main_menu.new_game(
+                                        self.game_id
+                                    )
+                                    self.curr_level = Level(
+                                        *self.levels[self.level_index]
+                                    )
                                     self.opening = Opening()
                                     self.status = "opening"
                                 elif text == "CONTINUE":
@@ -189,12 +207,16 @@ class Game:
                 self.main_menu.show()
             elif self.status == "opening":
                 self.opening.display()
-                if (not self.opening.start_opening_flag
-                        and not self.opening.tell_story_flag):
+                if (
+                    not self.opening.start_opening_flag
+                    and not self.opening.tell_story_flag
+                ):
                     self.playing_game = True
-                if (not self.opening.start_opening_flag
-                        and not self.opening.tell_story_flag
-                        and not self.opening.end_opening_flag):
+                if (
+                    not self.opening.start_opening_flag
+                    and not self.opening.tell_story_flag
+                    and not self.opening.end_opening_flag
+                ):
                     self.status = "playing"
                     self.start_normal = pygame.time.get_ticks()
                     self.black_overlay.set_alpha(0)
@@ -206,7 +228,7 @@ class Game:
                 game_result = self.curr_level.check_level_end()
                 if game_result[0] == True:
                     # self.start_black = pygame.time.get_ticks() and not self.swith_to_new_level
-                    if game_result[1] == 'win':
+                    if game_result[1] == "win":
                         self.level_index += 1
                     if self.level_index >= len(self.levels):
                         self.status = "statistics"
@@ -214,13 +236,19 @@ class Game:
                         self.curr_level = None
                     else:
                         self.curr_level = Level(*self.levels[self.level_index])
-                        self.save_game(self.level_index + 1, self.curr_level.kills, 0, 'time')
+                        self.save_game(
+                            self.level_index + 1, self.curr_level.kills, 0, "time"
+                        )
             elif self.status == "statistics":
                 self.statistics.show()
-                self.display_surface.blit(self.btn_back_to_main_menu, self.btn_back_to_main_menu_rect)
+                self.display_surface.blit(
+                    self.btn_back_to_main_menu, self.btn_back_to_main_menu_rect
+                )
 
             if self.main_menu.choosing_level:
-                self.display_surface.blit(self.btn_back_to_main_menu, self.btn_back_to_main_menu_rect)
+                self.display_surface.blit(
+                    self.btn_back_to_main_menu, self.btn_back_to_main_menu_rect
+                )
 
             if self.start_black:
                 self.start_black_overlay()
@@ -230,10 +258,12 @@ class Game:
             if self.cursor_rect:
                 self.display_surface.blit(self.cursor, self.cursor_rect)
 
-            pygame.display.update() # обновляем экран, а то просто чёрное всё будет
-            self.clock.tick(FPS) # параметр 60 указывает выполнять цикл while 60 раз в секунду
+            pygame.display.update()  # обновляем экран, а то просто чёрное всё будет
+            self.clock.tick(
+                FPS
+            )  # параметр 60 указывает выполнять цикл while 60 раз в секунду
 
 
-if __name__ == '__main__':
-    game = Game() # Создаём игру
-    game.run() # Запускаем её
+if __name__ == "__main__":
+    game = Game()  # Создаём игру
+    game.run()  # Запускаем её

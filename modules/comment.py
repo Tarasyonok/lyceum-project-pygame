@@ -1,12 +1,13 @@
 import pygame
 from modules.settings import *
 
+
 class Comment:
     def __init__(self, pos, text):
         self.pos = pos
         self.text = text
 
-        self.font = pygame.font.Font(UI_FONT,UI_FONT_SIZE)
+        self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
         self.display_surface = pygame.display.get_surface()
         self.size = 0
 
@@ -22,7 +23,9 @@ class Comment:
         self.display_surface.blit(text_surf, text_rect)
         # self.display_surface.blit(text_surf, (0, 0), (self.pos[0], self.pos[1], text_surf.get_width(), text_surf.get_height()))
         # self.display_surface.blit(text_surf, (0, 0), text_rect)
-        pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, text_rect.inflate(20, 20), 3)
+        pygame.draw.rect(
+            self.display_surface, UI_BORDER_COLOR, text_rect.inflate(20, 20), 3
+        )
 
         self.size += 0.01
 
@@ -30,4 +33,3 @@ class Comment:
         self.kill()
 
     # def display(self):
-

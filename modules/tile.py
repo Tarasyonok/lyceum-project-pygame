@@ -9,7 +9,7 @@ class Tile(pygame.sprite.Sprite):
         self.image = surface.convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.copy()
-        if sprite_type == 'stop':
+        if sprite_type == "stop":
             self.hitbox.top += 5
             self.hitbox.height -= 15
         else:
