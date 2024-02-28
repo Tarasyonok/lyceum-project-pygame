@@ -47,6 +47,8 @@ class Game:
             ('prod2', pygame.rect.Rect(0, 0, 10000, 10000)),
         ]
 
+        self.swith_to_new_level = False
+
         self.status = "mainmenu"
         # statuses: mainmenu, opening, playing, statistics, choosing
 
@@ -102,6 +104,7 @@ class Game:
         else:
             self.black_overlay.set_alpha(255)
             self.start_black = None
+            self.swith_to_new_level = True
 
             self.status = self.want_status
             if self.status == "playing":
@@ -202,6 +205,7 @@ class Game:
                 self.curr_level.run()  # запускаем уровень
                 game_result = self.curr_level.check_level_end()
                 if game_result[0] == True:
+                    # self.start_black = pygame.time.get_ticks() and not self.swith_to_new_level
                     if game_result[1] == 'win':
                         self.level_index += 1
                     if self.level_index >= len(self.levels):

@@ -21,7 +21,7 @@ class Player(Entity):
         self.animation_move_speed = 0.15
         self.animation_idle_speed = 0.05
         self.animation_attack_speed = 0.1
-        self.animation_hit_speed = 0.2
+        self.animation_hit_speed = 0.1
         self.animation_die_speed = 0.2
 
         self.direction = pygame.math.Vector2()
@@ -44,7 +44,7 @@ class Player(Entity):
 
         self.vulnerable = True
         self.hurt_time = None
-        self.vulnerability_duration = 500
+        self.vulnerability_duration = 700
 
         self.sounds = {
             # 'idle': pygame.mixer.Sound(fixpath(f'assets/sounds/player/idle.mp3')),
@@ -207,9 +207,11 @@ class Player(Entity):
                     sound_name = 'die'
                 else:  # move
                     sound_name = 'move'
-                self.sound.stop()
+                if self.play_sound:
+                    self.sound.stop()
                 self.sound = self.sounds[sound_name]
                 self.sound.play()
+                self.play_sound = True
             except KeyError:
                 pass
 
