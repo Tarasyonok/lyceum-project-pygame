@@ -36,8 +36,10 @@ class Player(Entity):
 
         self.obstacle_sprites = obstacle_sprites
 
-        self.stats = {"health": 100, "attack": 10, "speed": 4}
+        self.stats = {"health": 100, "energy": 60, "attack": 50, "speed": 4}
         self.health = self.stats["health"]
+        self.energy = self.stats["energy"]
+        self.exp = 123
         self.speed = self.stats["speed"]
 
         self.create_attack = create_attack

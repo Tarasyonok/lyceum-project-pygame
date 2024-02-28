@@ -44,8 +44,6 @@ class Game:
         self.levels = [
             ("level1", pygame.rect.Rect(0, 0, 10000, 10000)),
             ("prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod4", pygame.rect.Rect(0, 0, 10000, 10000)),
         ]
 
         self.curr_level = None
@@ -142,12 +140,12 @@ class Game:
         con = sqlite3.connect(fixpath("data/database.sqlite"))
         cur = con.cursor()
 
-        kills, deaths = cur.execute(
+        deaths = cur.execute(
             f"""
-        SELECT kills, deaths from Games
+        SELECT deaths from Games
         WHERE id = {self.curr_player}
         """
-        ).fetchone()
+        ).fetchone()[0]
 
         deaths += is_died
 
@@ -235,14 +233,14 @@ class Game:
             elif self.status == "opening":
                 self.opening.display()
                 if (
-                        not self.opening.start_opening_flag
-                        and not self.opening.tell_story_flag
+                    not self.opening.start_opening_flag
+                    and not self.opening.tell_story_flag
                 ):
                     self.playing_game = True
                 if (
-                        not self.opening.start_opening_flag
-                        and not self.opening.tell_story_flag
-                        and not self.opening.end_opening_flag
+                    not self.opening.start_opening_flag
+                    and not self.opening.tell_story_flag
+                    and not self.opening.end_opening_flag
                 ):
                     self.status = "playing"
                     self.start_normal = pygame.time.get_ticks()
@@ -264,7 +262,7 @@ class Game:
                     else:
                         self.curr_level = Level(*self.levels[self.level_index])
                         self.save_game(
-                            self.level_index + 1, self.curr_level.kills, game_result[1] == "lose", "time"
+                            self.level_index + 1, self.curr_level.kills, 0, "time"
                         )
             elif self.status == "statistics":
                 self.statistics.show()

@@ -25,9 +25,9 @@ UI_BORDER_COLOR_ACTIVE = "gold"
 
 monster_data = {
     "slime": {
-        "health": 30,
+        "health": 50,
         "exp": 20,
-        "damage": 5,
+        "damage": 10,
         "attack_type": None,
         "attack_sound": None,
         "speed": 1,
@@ -47,9 +47,9 @@ monster_data = {
         "notice_radius": 300,
     },
     "golem": {
-        "health": 70,
+        "health": 150,
         "exp": 100,
-        "damage": 15,
+        "damage": 25,
         "attack_type": None,
         "attack_sound": None,
         "speed": 1.5,
@@ -71,7 +71,7 @@ monster_data = {
     "minotaur": {
         "health": 200,
         "exp": 2000,
-        "damage": 25,
+        "damage": 75,
         "attack_type": None,
         "attack_sound": None,
         "speed": 1,
