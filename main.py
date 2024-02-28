@@ -44,6 +44,8 @@ class Game:
         self.levels = [
             ("level1", pygame.rect.Rect(0, 0, 10000, 10000)),
             ("prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod4", pygame.rect.Rect(0, 0, 10000, 10000)),
         ]
 
         self.curr_level = None
@@ -246,7 +248,7 @@ class Game:
                     self.start_normal = pygame.time.get_ticks()
                     self.black_overlay.set_alpha(0)
                     self.end_black_overlay()
-                    pygame.mouse.set_visible(True)
+                    self.show_cursor = True
             elif self.status == "playing":
                 self.screen.fill((10, 9, 9))  # цвет фона
                 self.curr_level.run()  # запускаем уровень
@@ -256,11 +258,13 @@ class Game:
                     if game_result[1] == "win":
                         self.level_index += 1
                     if self.level_index >= len(self.levels):
+                        self.show_cursor = True
                         self.status = "statistics"
                         self.statistics = Statistics(self.curr_player)
                         self.curr_level = None
                     else:
                         self.curr_level = Level(*self.levels[self.level_index])
+                        print("kills", self.curr_level.kills)
                         self.save_game(
                             self.level_index + 1, self.curr_level.kills, 0, "time"
                         )

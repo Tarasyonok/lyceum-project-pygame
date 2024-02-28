@@ -167,6 +167,8 @@ class Level:
             if collision_sprites:
                 for target_sprite in collision_sprites:
                     target_sprite.get_damage(self.player, "sword")
+                    if target_sprite.health <= 0:
+                        self.kills += 1
 
     def damage_player(self, amount):
         if self.player.vulnerable:

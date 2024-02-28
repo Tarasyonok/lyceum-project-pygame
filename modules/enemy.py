@@ -68,6 +68,9 @@ class Enemy(Entity):
             # 'die': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/die.mp3')),
         }
 
+        self.sounds["move"].set_volume(0.2)
+        self.sounds["attack"].set_volume(0.2)
+
     def import_graphics(self, name):
         # print(fixpath(f'assets/images/enemies/{name}'))
         self.animations = {"idle": [], "move": [], "attack": [], "hit": [], "die": []}
@@ -187,7 +190,6 @@ class Enemy(Entity):
 
         if self.died:
             self.kill()
-            self.sound.stop()
 
     def cooldown(self):
         current_time = pygame.time.get_ticks()

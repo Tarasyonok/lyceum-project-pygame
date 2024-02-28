@@ -43,6 +43,15 @@ class Statistics:
         self.deaths_text_rect = self.deaths_text.get_rect(
             center=(width * 0.5, height * 0.5)
         )
+        cur = con.cursor()
+        cur.execute(
+            f"""
+                                                                UPDATE Games SET level=0, kills=0, deaths=0, time=0
+                                                                WHERE id = {player_id}
+                                                                """
+        )
+        con.commit()
+        con.close()
 
         # self.kills_num_text = self.font.render(str(kills), True, self.normal_color)
         # self.kills_num_text_rect = self.kills_num_text.get_rect(
