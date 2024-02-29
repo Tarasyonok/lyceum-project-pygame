@@ -63,13 +63,6 @@ class Level:
         # self.hover_color = pygame.color.Color((210, 210, 210))
         # self.active_color = pygame.color.Color((150, 50, 50))
 
-    def input(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_ESCAPE]:
-            self.pause_overlay.set_alpha(200)
-            self.show_pause_menu = True
-            self.player.block_keybord = True
-
     def create_map(self, level_name):
         layouts = {
             "stop": import_csv_layout(fixpath(f"levels/{level_name}/map_Stop.csv")),
@@ -270,7 +263,7 @@ class Level:
         self.visible_sprites.update()
         self.visible_sprites.enemy_update(self.player)
         self.player_attack_logic()
-        self.input()
+        # self.input()
         # self.display_text(
         #     [
         #         "WELCOME, DMITRY SERGEEVICH!",

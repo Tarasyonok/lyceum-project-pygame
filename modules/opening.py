@@ -8,15 +8,15 @@ class Opening:
         self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
 
         self.story = [
-            ("Kingdom of Elfrieden is the largest in the world.", 3000),
-            ("All energy people use is extracting from magical crystals.", 3000),
-            ("A lot of magical crystals quarried in the dungeon Aincrad.", 3000),
-            ("One day a lot of miners didn't came back from the dungeon.", 3000),
-            ("The survivors said, that they was murdered by monsters.", 3000),
-            ("No one knew where these creatures came from", 3000),
-            ("and none were prepared for there attack.", 3000),
-            ("The King is sending you as the strongest warrior to the dungeon.", 3000),
-            ("You must kill all monsters!", 3000),
+            ("Kingdom of Elfrieden is the largest in the world.", 2000),
+            ("All energy people use is extracting from magical crystals.", 2000),
+            ("A lot of magical crystals quarried in the dungeon Aincrad.", 2000),
+            ("One day a lot of miners didn't came back from the dungeon.", 2000),
+            ("The survivors said, that they was murdered by monsters.", 2000),
+            ("No one knew where these creatures came from", 2000),
+            ("and none were prepared for there attack.", 2000),
+            ("The King is sending you as the strongest warrior to the dungeon.", 2000),
+            ("You must kill all monsters!", 2000),
         ]
 
         self.text_color = pygame.color.Color((255, 255, 255))

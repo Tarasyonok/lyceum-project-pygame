@@ -178,16 +178,20 @@ class Game:
                     if self.status == "mainmenu":
                         self.main_menu.mouse_hover(event.pos)
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.status == "opening":
+                        continue
                     self.cursor = self.active_cursor
                     if event.button == 1:
                         self.main_menu.mouse_press(event.pos)
                 if event.type == pygame.MOUSEBUTTONUP:
+
+
                     self.cursor = self.normal_cursor
                     if self.curr_level and self.curr_level.show_pause_menu:
                         if self.mouse_check(self.curr_level.back_to_game_rect, event.pos):
                             self.curr_level.show_pause_menu = False
                             self.curr_level.player.block_keybord = False
-                            self.show_cursor = False
+                            self.show_cursor = True
                         elif self.mouse_check(self.curr_level.return_to_menu_rect, event.pos):
                             self.curr_level = None
                             self.status = "mainmenu"
@@ -197,7 +201,7 @@ class Game:
                         self.status = "mainmenu"
                         self.main_menu.choosing_level = None
                         self.main_menu.in_settings = None
-                        self.show_cursor = True
+                        # self.show_cursor = True
                     if event.button == 1:
                         if self.main_menu.choosing_level:
                             click_info = self.main_menu.mouse_choosing_click(event.pos)
@@ -222,9 +226,15 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        if self.curr_level:
+                        if self.status == "opening":
+                            self.status = "playing"
+                        elif self.curr_level:
                             self.curr_level.show_pause_menu = True
-                            self.show_cursor 
+                            self.curr_level.player.block_keybord = True
+                            self.show_cursor = True
+                            self.curr_level.pause_overlay.set_alpha(200)
+                            self.curr_level.show_pause_menu = True
+                            self.player.block_keybord = True
                         else:
                             self.status = "mainmenu"
                             self.main_menu.choosing_level = None
