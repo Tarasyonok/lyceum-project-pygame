@@ -6,7 +6,7 @@ from modules.entity import Entity
 
 
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack):
+    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, create_magic):
         super().__init__(groups)
         self.image = pygame.image.load(
             fixpath("assets/images/red-wizard/downidle1.png")
@@ -36,12 +36,14 @@ class Player(Entity):
 
         self.obstacle_sprites = obstacle_sprites
 
-        self.stats = {"health": 100, "attack": 100, "energy": 60, "": 4, "speed": 7}
+        self.stats = {"health": 100, "attack": 100, "energy": 60, "magic": 4, "speed": 7}
         self.health = self.stats["health"]
+        self.energy = self.stats["energy"]
         self.speed = self.stats["speed"]
 
         self.create_attack = create_attack
         self.destroy_attack = destroy_attack
+        self.create_magic = create_magic
 
         self.vulnerable = True
         self.hurt_time = None
@@ -173,11 +175,11 @@ class Player(Entity):
         if keys[pygame.K_1]:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            self.
 
-        if keys[pygame.K_1]:
+        if keys[pygame.K_2]:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
+            self.create_magic("heal", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
 
 
         # if keys[pygame.K_F1]:
@@ -186,6 +188,12 @@ class Player(Entity):
         #     self.energy = self.stats['energy']
         #     self.exp = 10000
         #     self.speed = self.stats['speed']
+
+    def energy_recovery(self):
+        if self.energy < self.stats['energy']:
+            self.energy += 0.01 * self.stats['magic']
+        else:
+            self.energy = self.stats['energy']
 
     def get_status(self):
         self.prev_status = self.status
@@ -282,3 +290,4 @@ class Player(Entity):
         self.play_sounds()
         self.animate()
         self.move(self.speed)
+        self.energy_recovery()

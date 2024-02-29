@@ -7,6 +7,7 @@ from modules.debug import debug
 from modules.support import *
 from modules.ui import UI
 from modules.enemy import Enemy
+from modules.magic import MagicPlayer
 from modules.comment import Comment
 import datetime
 
@@ -40,6 +41,8 @@ class Level:
         self.start_level_time = datetime.datetime.now()
         self.set_pause_menu()
         self.show_pause_menu = False
+
+        self.magic_player = MagicPlayer()
 
     def set_pause_menu(self):
         width = self.display_surface.get_width()
@@ -112,6 +115,7 @@ class Level:
                                     self.obstacle_sprites,
                                     self.create_attack,
                                     self.destroy_attack,
+                                    self.create_magic,
                                 )
                             else:
                                 if col == 1:

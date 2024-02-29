@@ -81,6 +81,12 @@ monster_data = {
     },
 }
 
+magic_data = {
+	'flame': {'strength': 5,'cost': 20},
+	'heal' : {'strength': 20,'cost': 10}
+}
+
+
 MAIN_TILE_IMAGES = {}
 
 ID = 0
