@@ -42,11 +42,11 @@ class Game:
         self.main_menu = MainMenu()
 
         self.levels = [
-            ("level0", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("delete/prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("delete/prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("delete/prod4", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod_levels/level1", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod_levels/level2", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod_levels/level3", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod_levels/level4", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod_levels/level5", pygame.rect.Rect(0, 0, 10000, 10000)),
         ]
 
         self.curr_level = None
