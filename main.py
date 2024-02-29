@@ -42,10 +42,10 @@ class Game:
         self.main_menu = MainMenu()
 
         self.levels = [
-            ("level1", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod4", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("level3", pygame.rect.Rect(0, 0, 10000, 10000)),
+            # ("prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
+            # ("prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
+            # ("prod4", pygame.rect.Rect(0, 0, 10000, 10000)),
         ]
 
         self.curr_level = None
@@ -71,6 +71,8 @@ class Game:
         self.cursor = self.normal_cursor
         self.cursor_rect = None
         self.show_cursor = True
+        self.click_sound = pygame.mixer.Sound(fixpath(f'assets/sounds/interface/hover.mp3'))
+        self.click_sound.set_volume(0.3)
 
     def set_back_to_main_menu(self):
         width = self.display_surface.get_width()
@@ -138,20 +140,21 @@ class Game:
             self.black_overlay.set_alpha(0)
             self.start_normal = None
 
-    def save_game(self, level, kills, is_died, time):
+    def save_game(self, is_win, add_kills, is_died, time):
         con = sqlite3.connect(fixpath("data/database.sqlite"))
         cur = con.cursor()
 
-        deaths = cur.execute(
+        level, kills, deaths = cur.execute(
             f"""
-        SELECT deaths from Games
+        SELECT level, kills, deaths from Games
         WHERE id = {self.curr_player}
         """
-        ).fetchone()[0]
+        ).fetchone()
 
+        level += is_win
+        kills += add_kills
         deaths += is_died
 
-        print(level, kills, deaths, time)
         cur.execute(
             f"""
         UPDATE Games SET level={level}, kills={kills}, deaths={deaths}, time={time}
@@ -180,9 +183,10 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.status == "opening":
                         continue
-                    self.cursor = self.active_cursor
-                    if event.button == 1:
-                        self.main_menu.mouse_press(event.pos)
+                    if event.button == 1 and self.show_cursor:
+                        self.cursor = self.active_cursor
+                        self.click_sound.play()
+
                 if event.type == pygame.MOUSEBUTTONUP:
 
 
@@ -191,7 +195,7 @@ class Game:
                         if self.mouse_check(self.curr_level.back_to_game_rect, event.pos):
                             self.curr_level.show_pause_menu = False
                             self.curr_level.player.block_keybord = False
-                            self.show_cursor = True
+                            self.show_cursor = False
                         elif self.mouse_check(self.curr_level.return_to_menu_rect, event.pos):
                             self.curr_level = None
                             self.status = "mainmenu"
@@ -234,7 +238,6 @@ class Game:
                             self.show_cursor = True
                             self.curr_level.pause_overlay.set_alpha(200)
                             self.curr_level.show_pause_menu = True
-                            self.player.block_keybord = True
                         else:
                             self.status = "mainmenu"
                             self.main_menu.choosing_level = None
@@ -265,6 +268,10 @@ class Game:
                 game_result = self.curr_level.check_level_end()
                 if game_result[0] == True:
                     # self.start_black = pygame.time.get_ticks() and not self.swith_to_new_level
+                    print("kills", self.curr_level.kills)
+                    self.save_game(
+                        game_result[1] == "win", self.curr_level.kills, game_result[1] == "lose", "time"
+                    )
                     if game_result[1] == "win":
                         self.level_index += 1
                     if self.level_index >= len(self.levels):
@@ -274,10 +281,7 @@ class Game:
                         self.curr_level = None
                     else:
                         self.curr_level = Level(*self.levels[self.level_index])
-                        print("kills", self.curr_level.kills)
-                        self.save_game(
-                            self.level_index + 1, self.curr_level.kills, 0, "time"
-                        )
+
             elif self.status == "statistics":
                 self.statistics.show()
                 self.display_surface.blit(

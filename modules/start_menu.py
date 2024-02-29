@@ -54,9 +54,6 @@ class MainMenu:
             center=(half_width, height * 0.6 + 120)
         )
 
-        self.choose_btn_sound = pygame.mixer.Sound(fixpath(f'assets/sounds/interface/hover.mp3'))
-        self.choose_btn_sound_is_playing = False
-
         self.create_settings_interface()
 
     def show_choose_level(self):

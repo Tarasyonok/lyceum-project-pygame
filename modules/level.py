@@ -35,7 +35,8 @@ class Level:
         self.comments = []  # [Comment((500, 500), "Hello, world!")]
 
         # statistics
-        self.kills = 0
+        self.can_kill = len(self.attackable_sprites)
+        print(self.can_kill)
         self.start_level_time = datetime.datetime.now()
         self.set_pause_menu()
         self.show_pause_menu = False
@@ -119,10 +120,10 @@ class Level:
                                     monster_name = "cobra"
                                 elif col == 8:
                                     monster_name = "golem"
-                                else:
-                                    monster_name = "slime"
+                                # else:
+                                #     monster_name = "slime"
                                 # elif col == 12: monster_name = 'cyclop'
-                                # elif col == 13: monster_name = 'minotaur'
+                                elif col == 13: monster_name = 'minotaur'
                                 Enemy(
                                     monster_name,
                                     (x, y),
@@ -160,8 +161,6 @@ class Level:
             if collision_sprites:
                 for target_sprite in collision_sprites:
                     target_sprite.get_damage(self.player, "sword")
-                    if target_sprite.health <= 0:
-                        self.kills += 1
 
     def damage_player(self, amount):
         if self.player.vulnerable:
@@ -222,10 +221,12 @@ class Level:
 
     def check_level_end(self):
         if self.player.health <= 0:
+            self.kills = self.can_kill - len(self.attackable_sprites)
             return True, "lose"
         if len(self.attackable_sprites) == 0 and self.player.rect.colliderect(
             self.exit_area
         ):
+            self.kills = self.can_kill - len(self.attackable_sprites)
             return True, "win"
 
         return False, "still playing"

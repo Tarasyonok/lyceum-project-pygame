@@ -60,16 +60,15 @@ class Enemy(Entity):
 
         self.damage_player = damage_player
 
-        self.sounds = {
-            # 'idle': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/idle.mp3')),
-            'move': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/move.mp3')),
-            'attack': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/attack.mp3')),
-            # 'hit': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/hit.mp3')),
-            # 'die': pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/die.mp3')),
-        }
+        self.sounds = {}
 
-        self.sounds["move"].set_volume(0.2)
-        self.sounds["attack"].set_volume(0.2)
+        sound_names = ['idle', 'move', 'attack', 'hit', 'die']
+        for name in sound_names:
+            try:
+                self.sounds[name] = pygame.mixer.Sound(fixpath(f'assets/sounds/{self.monster_name}/{name}.mp3'))
+                self.sounds[name].set_volume(0.2)
+            except FileNotFoundError:
+                pass
 
     def import_graphics(self, name):
         # print(fixpath(f'assets/images/enemies/{name}'))
