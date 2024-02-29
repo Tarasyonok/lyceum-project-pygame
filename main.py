@@ -43,6 +43,7 @@ class Game:
 
         self.levels = [
             ("level3", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
             # ("prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
             # ("prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
             # ("prod4", pygame.rect.Rect(0, 0, 10000, 10000)),
