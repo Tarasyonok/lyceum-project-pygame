@@ -153,6 +153,13 @@ class Level:
             self.current_attack.kill()
         self.current_attack = None
 
+    def create_magic(self, style, strength, cost):
+        if style == 'heal':
+            self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
+
+        if style == 'flame':
+            self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
+
     def player_attack_logic(self):
         if self.current_attack:
             collision_sprites = pygame.sprite.spritecollide(

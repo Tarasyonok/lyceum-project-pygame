@@ -36,7 +36,7 @@ class Player(Entity):
 
         self.obstacle_sprites = obstacle_sprites
 
-        self.stats = {"health": 100, "attack": 100, "speed": 7}
+        self.stats = {"health": 100, "attack": 100, "energy": 60, "": 4, "speed": 7}
         self.health = self.stats["health"]
         self.speed = self.stats["speed"]
 
@@ -170,11 +170,15 @@ class Player(Entity):
             self.create_attack("sword")
             # attack
 
-        # if keys[pygame.K_1]:
-        #     self.attacking = True
-        #     self.attack_time = pygame.time.get_ticks()
-        #     self.create_attack('magic')
-        #     magic
+        if keys[pygame.K_1]:
+            self.attacking = True
+            self.attack_time = pygame.time.get_ticks()
+            self.
+
+        if keys[pygame.K_1]:
+            self.attacking = True
+            self.attack_time = pygame.time.get_ticks()
+
 
         # if keys[pygame.K_F1]:
         #     self.stats = {'health': 10000, 'energy': 10000, 'attack': 10000, 'speed': 4}
