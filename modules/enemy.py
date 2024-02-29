@@ -19,8 +19,13 @@ class Enemy(Entity):
         # movement
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.copy()
-        self.hitbox.top += 10
-        self.hitbox.height -= 10
+
+        if monster_name == "slime":
+            self.hitbox.top += 0
+            self.hitbox.height -= 0
+        else:
+            self.hitbox.top += 5
+            self.hitbox.height -= 7
         # if monster_name == 'cyclop':
         #     self.hitbox.top -= 30
         #     self.hitbox.height += 300

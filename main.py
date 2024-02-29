@@ -42,11 +42,11 @@ class Game:
         self.main_menu = MainMenu()
 
         self.levels = [
-            # ("level0", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("level0", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("delete/prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("delete/prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("delete/prod4", pygame.rect.Rect(0, 0, 10000, 10000)),
             ("prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
-            # ("prod2", pygame.rect.Rect(0, 0, 10000, 10000)),
-            # ("prod3", pygame.rect.Rect(0, 0, 10000, 10000)),
-            # ("prod4", pygame.rect.Rect(0, 0, 10000, 10000)),
         ]
 
         self.curr_level = None
@@ -198,6 +198,10 @@ class Game:
                             self.curr_level.player.block_keybord = False
                             self.show_cursor = False
                         elif self.mouse_check(self.curr_level.return_to_menu_rect, event.pos):
+                            kills = self.curr_level.can_kill - len(self.curr_level.attackable_sprites)
+                            self.save_game(
+                                0, kills, 0, "time"
+                            )
                             self.curr_level = None
                             self.status = "mainmenu"
                             self.main_menu.choosing_level = None
@@ -215,9 +219,7 @@ class Game:
                                 self.game_id, text = click_info
                                 self.curr_player = self.game_id
                                 if text == "NEW GAME":
-                                    self.level_index = self.main_menu.new_game(
-                                        self.game_id
-                                    )
+                                    self.level_index = self.main_menu.new_game(self.game_id) - 1
                                     self.curr_level = Level(
                                         *self.levels[self.level_index]
                                     )

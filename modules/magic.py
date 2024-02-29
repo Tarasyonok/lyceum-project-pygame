@@ -2,9 +2,13 @@ import pygame
 from modules.settings import *
 from random import randint
 
-class MagicPlayer:
-	def __init__(self):
+class MagicPlayer():  #pygame.sprite.Sprite
+	def __init__(self):  #, magic_type, groups
 		pass
+		# super().__init__(groups)
+		# self.magic_type = magic_type
+		# if magic_type == "heal":
+		# 	self.
 		# self.animation_player = animation_player
 		# self.sounds = {
 		# 'heal': pygame.mixer.Sound('../audio/heal.wav'),

@@ -135,11 +135,12 @@ class MainMenu:
         WHERE id = {id}
         """
         )
+        con.commit()
 
         con.close()
 
         self.choosing_level = False
-        return 0
+        return 1
 
     def continue_game(self, id):
         con = sqlite3.connect(fixpath("data/database.sqlite"))
@@ -156,6 +157,8 @@ class MainMenu:
         ).fetchone()[0]
 
         con.close()
+
+        level -= 1
 
         self.choosing_level = False
         return level

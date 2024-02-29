@@ -13,7 +13,7 @@ class Player(Entity):
         )
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.copy()
-        self.hitbox.top += 13
+        self.hitbox.top += 17
         self.hitbox.height -= 10
 
         self.import_player_assets()
@@ -36,7 +36,7 @@ class Player(Entity):
 
         self.obstacle_sprites = obstacle_sprites
 
-        self.stats = {"health": 100, "attack": 100, "energy": 60, "magic": 4, "speed": 7}
+        self.stats = {"health": 200, "attack": 20, "energy": 60, "magic": 4, "speed": 7}
         self.health = self.stats["health"]
         self.energy = self.stats["energy"]
         self.speed = self.stats["speed"]
