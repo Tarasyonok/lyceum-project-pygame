@@ -25,7 +25,7 @@ UI_BORDER_COLOR_ACTIVE = "gold"
 
 monster_data = {
     "slime": {
-        "health": 50,
+        "health": 30,
         "exp": 20,
         "damage": 10,
         "attack_type": None,
@@ -38,7 +38,7 @@ monster_data = {
     "cobra": {
         "health": 50,
         "exp": 20,
-        "damage": 10,
+        "damage": 15,
         "attack_type": None,
         "attack_sound": None,
         "speed": 1,
@@ -52,10 +52,10 @@ monster_data = {
         "damage": 25,
         "attack_type": None,
         "attack_sound": None,
-        "speed": 1.5,
+        "speed": 2,
         "resistance": 2,
-        "attack_radius": 30,
-        "notice_radius": 300,
+        "attack_radius": 35,
+        "notice_radius": 400,
     },
     "cyclop": {
         "health": 200,
@@ -69,9 +69,9 @@ monster_data = {
         "notice_radius": 500,
     },
     "minotaur": {
-        "health": 200,
+        "health": 250,
         "exp": 2000,
-        "damage": 75,
+        "damage": 40,
         "attack_type": None,
         "attack_sound": None,
         "speed": 1,
