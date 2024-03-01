@@ -24,6 +24,7 @@ class Player(Entity):
         self.animation_move_speed = 0.15
         self.animation_idle_speed = 0.05
         self.animation_attack_speed = 0.1
+        self.animation_magic_speed = 0.1
         self.animation_hit_speed = 0.1
         self.animation_die_speed = 0.2
 
@@ -33,6 +34,10 @@ class Player(Entity):
         self.attacking = False
         self.attack_cooldown = 500
         self.attack_time = None
+
+        self.doing_magic = False
+        self.magic_cooldown = 500
+        self.magic_time = None
 
         self.obstacle_sprites = obstacle_sprites
 
@@ -111,6 +116,41 @@ class Player(Entity):
                 "downleftsword3",
                 "downleftsword4",
             ],
+
+            "up_magic": ["upmagic1", "upmagic2", "upmagic3", "upmagic4"],
+            "down_magic": ["downmagic1", "downmagic2", "downmagic3", "downmagic4"],
+            "left_magic": ["leftmagic1", "leftmagic2", "leftmagic3", "leftmagic4"],
+            "right_magic": [
+                "rightmagic1",
+                "rightmagic2",
+                "rightmagic3",
+                "rightmagic4",
+            ],
+            "downright_magic": [
+                "downrightmagic1",
+                "downrightmagic2",
+                "downrightmagic3",
+                "downrightmagic4",
+            ],
+            "upright_magic": [
+                "uprightmagic1",
+                "uprightmagic2",
+                "uprightmagic3",
+                "uprightmagic4",
+            ],
+            "upleft_magic": [
+                "upleftmagic1",
+                "upleftmagic2",
+                "upleftmagic3",
+                "upleftmagic4",
+            ],
+            "downleft_magic": [
+                "downleftmagic1",
+                "downleftmagic2",
+                "downleftmagic3",
+                "downleftmagic4",
+            ],
+
             "up_hit": ["uphit1", "uphit2"],
             "down_hit": ["downhit1", "downhit2"],
             "left_hit": ["lefthit1", "lefthit2"],
@@ -173,13 +213,35 @@ class Player(Entity):
             # attack
 
         if keys[pygame.K_1]:
-            self.attacking = True
-            self.attack_time = pygame.time.get_ticks()
+            self.doing_magic = True
+            self.magic_time = pygame.time.get_ticks()
+            self.create_magic("heal", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
 
         if keys[pygame.K_2]:
-            self.attacking = True
-            self.attack_time = pygame.time.get_ticks()
-            self.create_magic("heal", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.doing_magic = True
+            self.magic_time = pygame.time.get_ticks()
+            self.create_magic("earth", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+
+        if keys[pygame.K_3]:
+            self.doing_magic = True
+            self.magic_time = pygame.time.get_ticks()
+            self.create_magic("ice", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+
+        if keys[pygame.K_4]:
+            self.doing_magic = True
+            self.magic_time = pygame.time.get_ticks()
+            self.create_magic("fire", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+
+        if keys[pygame.K_5]:
+            self.doing_magic = True
+            self.magic_time = pygame.time.get_ticks()
+            self.create_magic("lightning", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+
+        if keys[pygame.K_6]:
+            self.doing_magic = True
+            self.magic_time = pygame.time.get_ticks()
+            self.create_magic("dark", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+
 
 
         # if keys[pygame.K_F1]:
@@ -200,10 +262,11 @@ class Player(Entity):
         if "hit" in self.status:
             return
         if self.direction[0] == 0 and self.direction[1] == 0:
-            if "idle" not in self.status and "attack" not in self.status:
+            if "idle" not in self.status and "attack" not in self.status and "magic" not in self.status:
                 self.status = self.status + "_idle"
 
         if self.attacking:
+            self.status = self.status.replace("_magic", "")
             self.direction = pygame.math.Vector2()
             if "attack" not in self.status:
                 self.frame_index = 0
@@ -214,6 +277,19 @@ class Player(Entity):
         else:
             if "attack" in self.status:
                 self.status = self.status.replace("_attack", "")
+
+        if self.doing_magic and not self.attacking:
+            self.status = self.status.replace("_attack", "")
+            self.direction = pygame.math.Vector2()
+            if "magic" not in self.status:
+                self.frame_index = 0
+                if "idle" in self.status:
+                    self.status = self.status.replace("_idle", "_magic")
+                else:
+                    self.status = self.status + "_magic"
+        else:
+            if "magic" in self.status:
+                self.status = self.status.replace("_magic", "")
 
         if self.prev_status != self.status:
             self.frame_index = 0
@@ -237,6 +313,8 @@ class Player(Entity):
                     sound_name = "idle"
                 elif "attack" in self.status:
                     sound_name = "attack"
+                elif "magic" in self.status:
+                    sound_name = "magic"
                 elif "hit" in self.status:
                     sound_name = "hit"
                 elif "die" in self.status:
@@ -260,7 +338,10 @@ class Player(Entity):
         # print(int(self.frame_index))
         try:
             self.image = animation[int(self.frame_index)]
-            self.rect = self.image.get_rect(center=self.hitbox.center)
+            if "magic" in self.status:
+                self.rect = self.image.get_rect(topleft=self.hitbox.topleft )
+            else:
+                self.rect = self.image.get_rect(center=self.hitbox.center)
         except:
             print(int(self.frame_index), len(animation), self.status)
 
@@ -268,6 +349,8 @@ class Player(Entity):
             self.frame_index += self.animation_idle_speed
         elif "attack" in self.status:
             self.frame_index += self.animation_attack_speed
+        elif "magic" in self.status:
+            self.frame_index += self.animation_magic_speed
         elif "hit" in self.status:
             self.frame_index += self.animation_hit_speed
         elif "die" in self.status:
@@ -280,6 +363,8 @@ class Player(Entity):
             if "attack" in self.status:
                 self.attacking = False
                 self.destroy_attack()
+            if "magic" in self.status:
+                self.doing_magic = False
             if "hit" in self.status:
                 self.status = self.status.replace("_hit", "")
 

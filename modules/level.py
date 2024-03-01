@@ -7,7 +7,7 @@ from modules.debug import debug
 from modules.support import *
 from modules.ui import UI
 from modules.enemy import Enemy
-from modules.magic import MagicPlayer
+from modules.magic import Magic
 from modules.comment import Comment
 import datetime
 
@@ -41,8 +41,6 @@ class Level:
         self.start_level_time = datetime.datetime.now()
         self.set_pause_menu()
         self.show_pause_menu = False
-
-        self.magic_player = MagicPlayer()
 
     def set_pause_menu(self):
         width = self.display_surface.get_width()
@@ -159,10 +157,25 @@ class Level:
 
     def create_magic(self, style, strength, cost):
         if style == 'heal':
-            self.magic_player.heal(self.player, strength, cost, [self.visible_sprites])
+            Magic("heal", self.player.rect.center, [self.visible_sprites])
 
-        if style == 'flame':
-            self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
+        elif style == 'earth':
+            Magic("earth", self.player.rect.center, [self.visible_sprites])
+
+        elif style == 'ice':
+            Magic("ice", self.player.rect.center, [self.visible_sprites])
+
+        elif style == 'fire':
+            Magic("fire", self.player.rect.center, [self.visible_sprites])
+
+        elif style == 'lightning':
+            Magic("lightning", self.player.rect.center, [self.visible_sprites])
+
+        elif style == 'dark':
+            Magic("dark", self.player.rect.center, [self.visible_sprites])
+
+        # if style == 'flame':
+        #     self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
 
     def player_attack_logic(self):
         if self.current_attack:
