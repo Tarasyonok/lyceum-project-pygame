@@ -178,6 +178,7 @@ class Player(Entity):
         if self.status == "hit" or self.status == "die":
             return
         keys = pygame.key.get_pressed()
+        pos = pygame.mouse.get_pos()
 
         part2 = ""
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
@@ -215,32 +216,32 @@ class Player(Entity):
         if keys[pygame.K_1]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("heal", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("heal", magic_data["heal"]["strength"], magic_data["heal"]["cost"], pos)
 
         if keys[pygame.K_2]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("earth", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("earth", magic_data["heal"]["strength"], magic_data["heal"]["cost"], pos)
 
         if keys[pygame.K_3]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("ice", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("ice", magic_data["heal"]["strength"], magic_data["heal"]["cost"], pos)
 
         if keys[pygame.K_4]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("fire", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("fire", magic_data["heal"]["strength"], magic_data["heal"]["cost"], pos)
 
         if keys[pygame.K_5]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("lightning", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("lightning", magic_data["heal"]["strength"], magic_data["heal"]["cost"], pos)
 
         if keys[pygame.K_6]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("dark", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("dark", magic_data["heal"]["strength"], magic_data["heal"]["cost"], pos)
 
 
 

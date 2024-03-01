@@ -62,7 +62,7 @@ class Game:
         self.set_cursor()
 
     def set_cursor(self):
-        pygame.mouse.set_visible(False)
+        # pygame.mouse.set_visible(False)
         self.normal_cursor = pygame.image.load(
             fixpath("assets/images/cursor/normal.png")
         ).convert_alpha()
