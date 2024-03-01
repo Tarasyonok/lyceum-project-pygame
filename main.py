@@ -31,6 +31,7 @@ class Game:
         pygame.init()  # инициализируем pygame
         self.screen = pygame.display.set_mode((WIDTH, HEIGTH))  # создаём экран
         pygame.display.set_caption("Dungeon runner")  # задаём заголовок
+        pygame.display.set_icon(pygame.image.load(fixpath("assets/images/red-wizard/downmagic1.png")).convert_alpha())
 
         # -------------------------------------
         # Вот тебе задание: выбери и отобрази иконку на окне игры
@@ -42,11 +43,11 @@ class Game:
         self.main_menu = MainMenu()
 
         self.levels = [
-            ("prod_levels/level1", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod_levels/level2", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod_levels/level3", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod_levels/level4", pygame.rect.Rect(0, 0, 10000, 10000)),
-            ("prod_levels/level5", pygame.rect.Rect(0, 0, 10000, 10000)),
+            ("prod_levels/level1", pygame.rect.Rect(1888, 1088, 160, 64)),
+            ("prod_levels/level2", pygame.rect.Rect(416, 96, 160, 64)),
+            ("prod_levels/level3", pygame.rect.Rect(416, 96, 160, 64)),
+            ("prod_levels/level4", pygame.rect.Rect(416, 96, 160, 64)),
+            ("prod_levels/level5", pygame.rect.Rect(2912, 192, 160, 64)),
         ]
 
         self.curr_level = None
@@ -61,18 +62,30 @@ class Game:
         self.set_back_to_main_menu()
         self.set_cursor()
 
+        self.menu_music = pygame.mixer.Sound(fixpath("assets/sounds/main_theme.mp3"))
+        self.menu_music.set_volume(0.3)
+
+        self.main_level_sound = pygame.mixer.Sound(fixpath(f'assets/sounds/main_level.mp3'))
+        self.main_level_sound.set_volume(0.3)
+
+        self.boss_level_sound = pygame.mixer.Sound(fixpath(f'assets/sounds/boss_level.mp3'))
+        self.boss_level_sound.set_volume(0.3)
+
+        self.curr_sound = self.menu_music
+        self.curr_sound.play(loops=-1)
+
     def set_cursor(self):
-        # pygame.mouse.set_visible(False)
+        pygame.mouse.set_visible(False)
         self.normal_cursor = pygame.image.load(
             fixpath("assets/images/cursor/normal.png")
         ).convert_alpha()
         self.active_cursor = pygame.image.load(
             fixpath("assets/images/cursor/active.png")
         ).convert_alpha()
-        self.normal_cursor = pygame.image.load(
+        self.game_normal_cursor = pygame.image.load(
             fixpath("assets/images/cursor/game_normal.png")
         ).convert_alpha()
-        self.active_cursor = pygame.image.load(
+        self.game_active_cursor = pygame.image.load(
             fixpath("assets/images/cursor/game_active.png")
         ).convert_alpha()
         self.cursor = self.normal_cursor
@@ -184,28 +197,30 @@ class Game:
                     if not pygame.mouse.get_focused():
                         self.cursor_rect = None
                     else:
-                        self.cursor_rect = self.cursor.get_rect(topleft=(event.pos))
-                        self.cursor_rect = self.cursor.get_rect(center=(event.pos))
+                        if self.cursor == self.game_active_cursor:
+                            self.cursor_rect = self.cursor.get_rect(center=(event.pos))
+                        else:
+                            self.cursor_rect = self.cursor.get_rect(topleft=(event.pos))
                     if self.status == "mainmenu":
                         self.main_menu.mouse_hover(event.pos)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     print(event.pos)
                     if self.status == "opening":
                         continue
-                    if event.button == 1 and self.show_cursor:
+                    if event.button == 1 and self.show_cursor and self.cursor != self.game_active_cursor:
                         self.cursor = self.active_cursor
                         self.click_sound.play()
 
                 if event.type == pygame.MOUSEBUTTONUP:
 
-
-                    self.cursor = self.normal_cursor
+                    if self.cursor != self.game_active_cursor:
+                        self.cursor = self.normal_cursor
                     if self.curr_level and self.curr_level.show_pause_menu:
                         if self.mouse_check(self.curr_level.back_to_game_rect, event.pos):
                             self.curr_level.show_pause_menu = False
                             self.curr_level.player.block_keybord = False
                             # self.show_cursor = False
-                            self.cursor = self.normal_cursor
+                            self.cursor = self.game_active_cursor
                         elif self.mouse_check(self.curr_level.return_to_menu_rect, event.pos):
                             kills = self.curr_level.can_kill - len(self.curr_level.attackable_sprites)
                             self.save_game(
@@ -214,6 +229,9 @@ class Game:
                             self.curr_level = None
                             self.status = "mainmenu"
                             self.main_menu.choosing_level = None
+                            self.curr_sound.stop()
+                            self.curr_sound = self.menu_music
+                            self.curr_sound.play(loops=-1)
                         continue
                     if self.mouse_check(self.btn_back_to_main_menu_rect, event.pos):
                         self.status = "mainmenu"
@@ -224,7 +242,8 @@ class Game:
                         if self.main_menu.choosing_level:
                             click_info = self.main_menu.mouse_choosing_click(event.pos)
                             if click_info:
-                                self.show_cursor = False
+                                # self.show_cursor = False
+                                self.cursor = self.game_active_cursor
                                 self.game_id, text = click_info
                                 self.curr_player = self.game_id
                                 if text == "NEW GAME":
@@ -235,8 +254,16 @@ class Game:
                                     self.opening = Opening()
                                     self.status = "opening"
                                 elif text == "CONTINUE":
-                                    self.start_black = pygame.time.get_ticks()
-                                    self.want_status = "playing"
+                                    # self.start_black = pygame.time.get_ticks()
+                                    self.status = "playing"
+                                    self.level_index = self.main_menu.continue_game(self.game_id)
+                                    self.curr_level = Level(*self.levels[self.level_index])
+                                self.curr_sound.stop()
+                                if self.level_index == len(self.levels) - 1:
+                                    self.curr_sound = self.boss_level_sound
+                                else:
+                                    self.curr_sound = self.main_level_sound
+                                self.curr_sound.play(loops=-1)
                         else:
                             self.main_menu.mouse_click(event.pos)
 
@@ -248,6 +275,7 @@ class Game:
                             self.curr_level.show_pause_menu = True
                             self.curr_level.player.block_keybord = True
                             self.show_cursor = True
+                            self.cursor = self.normal_cursor
                             self.curr_level.pause_overlay.set_alpha(200)
                             self.curr_level.show_pause_menu = True
                         else:
@@ -258,6 +286,7 @@ class Game:
             if self.status == "mainmenu":
                 self.main_menu.show()
             elif self.status == "opening":
+                self.show_cursor = False
                 self.opening.display()
                 if (
                     not self.opening.start_opening_flag
@@ -274,7 +303,9 @@ class Game:
                     self.black_overlay.set_alpha(0)
                     self.end_black_overlay()
                     self.show_cursor = True
+                    self.cursor = self.game_active_cursor
             elif self.status == "playing":
+                self.show_cursor = True
                 self.screen.fill((10, 9, 9))  # цвет фона
                 self.curr_level.run()  # запускаем уровень
                 game_result = self.curr_level.check_level_end()
@@ -294,7 +325,13 @@ class Game:
                     else:
                         self.curr_level = Level(*self.levels[self.level_index])
 
+                    if self.level_index == len(self.levels) - 1:
+                        self.curr_sound.stop()
+                        self.curr_sound = self.boss_level_sound
+                        self.curr_sound.play(loops=-1)
+
             elif self.status == "statistics":
+                self.cursor = self.normal_cursor
                 self.statistics.show()
                 self.display_surface.blit(
                     self.btn_back_to_main_menu, self.btn_back_to_main_menu_rect

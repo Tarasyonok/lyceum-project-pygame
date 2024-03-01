@@ -23,6 +23,9 @@ class Enemy(Entity):
         if monster_name == "slime":
             self.hitbox.top += 0
             self.hitbox.height -= 0
+        elif monster_name == "golem":
+            self.hitbox.top += 0
+            self.hitbox.height -= 0
         else:
             self.hitbox.top += 5
             self.hitbox.height -= 7
@@ -129,15 +132,28 @@ class Enemy(Entity):
             self.direction = pygame.math.Vector2()
 
     def get_damage(self, player, attack_type):
+        if attack_type == "sword":
+            damage = player.stats["attack"]
+        elif attack_type == "earth":
+            damage = magic_data["earth"]["strength"]
+        elif attack_type == "ice":
+            damage = magic_data["ice"]["strength"]
+        elif attack_type == "fire":
+            damage = magic_data["fire"]["strength"]
+        elif attack_type == "lightning":
+            damage = magic_data["lightning"]["strength"]
+        elif attack_type == "dark":
+            damage = magic_data["dark"]["strength"]
+        else:
+            print(attack_type)
+            return
+
         if not self.vulnerable:
             return
         if self.status == "hit" or self.status == "die":
             return
         self.direction = self.get_player_distance_direction(player)[1]
-        if attack_type == "sword":
-            self.health -= player.stats["attack"]
-        else:
-            pass
+        self.health -= damage
         # print(self.health)
         if self.health <= 0:
             self.status = "die"

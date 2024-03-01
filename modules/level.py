@@ -155,28 +155,30 @@ class Level:
             self.current_attack.kill()
         self.current_attack = None
 
-    def create_magic(self, style, strength, cost, pos):
+    def create_magic(self, style):
+        if self.player.energy < magic_data[style]["cost"]:
+            return
+        pos = pygame.mouse.get_pos()
         x_pl, y_pl = self.player.rect.center
         width, height = self.display_surface.get_size()
 
         magic_pos = (pos[0] + x_pl - (width// 2), pos[1] + y_pl - (height // 2))
         if style == 'heal':
-            Magic("heal", magic_pos, [self.visible_sprites])
+            self.current_attack = None
+            Magic("heal", self.player.rect.center, [self.visible_sprites])
 
-        elif style == 'earth':
-            Magic("earth", magic_pos, [self.visible_sprites])
+        else:
+            self.current_attack = Magic(style, magic_pos, [self.visible_sprites, self.attack_sprites])
+        self.player.energy -= magic_data[style]["cost"]
 
-        elif style == 'ice':
-            Magic("ice", magic_pos, [self.visible_sprites])
-
-        elif style == 'fire':
-            Magic("fire", magic_pos, [self.visible_sprites])
-
-        elif style == 'lightning':
-            Magic("lightning", magic_pos, [self.visible_sprites])
-
-        elif style == 'dark':
-            Magic("dark", magic_pos, [self.visible_sprites])
+        if self.current_attack:
+            collision_sprites = pygame.sprite.spritecollide(
+                self.current_attack, self.attackable_sprites, False
+            )
+            if collision_sprites:
+                for target in collision_sprites:
+                    target.get_damage(self.player, self.current_attack.attack_type)
+            self.current_attack = None
 
         # if style == 'flame':
         #     self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
@@ -248,16 +250,38 @@ class Level:
             # t.image.fill('red')
 
     def check_level_end(self):
+        if self.player.rect.colliderect(self.exit_area):
+            print("!!!")
         if self.player.health <= 0:
             self.kills = self.can_kill - len(self.attackable_sprites)
             return True, "lose"
-        if len(self.attackable_sprites) == 0 and self.player.rect.colliderect(
-            self.exit_area
-        ):
+        if len(self.attackable_sprites) == 0 and self.player.rect.colliderect(self.exit_area):
             self.kills = self.can_kill - len(self.attackable_sprites)
             return True, "win"
 
         return False, "still playing"
+
+    def set_black_overlay(self):
+        width = self.display_surface.get_width()
+        height = self.display_surface.get_height()
+
+        self.black_time = 500
+        self.normal_time = 500
+        self.black_overlay = pygame.surface.Surface((width, height))
+        self.black_overlay_rect = self.black_overlay.get_rect(topleft=(0, 0))
+        pygame.draw.rect(
+            self.black_overlay, pygame.color.Color((0, 0, 0)), self.black_overlay_rect
+        )
+        self.black_overlay.set_alpha(0)
+
+        self.start_normal = None
+        self.start_black = None
+        # self.start_normal = pygame.time.get_ticks()
+        # self.start_black = pygame.time.get_ticks()
+
+        self.normal_color = pygame.color.Color((255, 255, 255))
+        self.hover_color = pygame.color.Color((210, 210, 210))
+        self.active_color = pygame.color.Color((150, 50, 50))
 
     def display_text(self, texts, delta):
         if "start_time" not in self.__dict__:

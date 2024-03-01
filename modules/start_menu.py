@@ -34,10 +34,6 @@ class MainMenu:
         self.choosing_level = None
         self.in_settings = False
 
-        self.menu_music = pygame.mixer.Sound(fixpath("assets/sounds/main_theme.mp3"))
-        self.menu_music.play(loops=-1)
-        self.menu_music.set_volume(0.1)
-
         # buttons
 
         self.btn_play = self.font.render("PLAY", True, self.normal_color)

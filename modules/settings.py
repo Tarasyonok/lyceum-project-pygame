@@ -53,7 +53,7 @@ monster_data = {
         "attack_type": None,
         "attack_sound": None,
         "speed": 2,
-        "resistance": 2,
+        "resistance": 1,
         "attack_radius": 35,
         "notice_radius": 400,
     },
@@ -69,21 +69,25 @@ monster_data = {
         "notice_radius": 500,
     },
     "minotaur": {
-        "health": 250,
+        "health": 500,
         "exp": 2000,
-        "damage": 40,
+        "damage": 50,
         "attack_type": None,
         "attack_sound": None,
         "speed": 1,
-        "resistance": 2,
+        "resistance": 0,
         "attack_radius": 80,
         "notice_radius": 500,
     },
 }
 
 magic_data = {
-	'flame': {'strength': 5,'cost': 20},
-	'heal' : {'strength': 20,'cost': 10}
+	'heal' : {'strength': 20,'cost': 10},
+    'earth': {'strength': 20,'cost': 10},
+    'ice': {'strength': 30,'cost': 15},
+    'fire': {'strength': 40,'cost': 20},
+    'lightning': {'strength': 60,'cost': 30},
+    'dark': {'strength': 100,'cost': 40},
 }
 
 

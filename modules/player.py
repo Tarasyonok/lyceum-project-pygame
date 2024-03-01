@@ -41,7 +41,7 @@ class Player(Entity):
 
         self.obstacle_sprites = obstacle_sprites
 
-        self.stats = {"health": 200, "attack": 20, "energy": 60, "magic": 4, "speed": 4}
+        self.stats = {"health": 200, "attack": 20, "energy": 100, "magic": 6, "speed": 4}
         self.health = self.stats["health"]
         self.energy = self.stats["energy"]
         self.speed = self.stats["speed"]
@@ -64,6 +64,8 @@ class Player(Entity):
 
         self.play_sound = False
         self.block_keybord = False
+
+        self.is_died = False
 
     def import_player_assets(self):
         self.pathes = {
@@ -173,7 +175,7 @@ class Player(Entity):
     def input(self):
         if self.block_keybord:
             return
-        if self.attacking:
+        if self.attacking or self.doing_magic:
             return
         if self.status == "hit" or self.status == "die":
             return
@@ -215,32 +217,35 @@ class Player(Entity):
         if keys[pygame.K_1]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("heal", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("heal")
+            self.health += magic_data["heal"]["strength"]
+            if self.health > self.stats["health"]:
+                self.health = self.stats["health"]
 
         if keys[pygame.K_2]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("earth", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("earth")
 
         if keys[pygame.K_3]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("ice", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("ice")
 
         if keys[pygame.K_4]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("fire", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("fire")
 
         if keys[pygame.K_5]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("lightning", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("lightning")
 
         if keys[pygame.K_6]:
             self.doing_magic = True
             self.magic_time = pygame.time.get_ticks()
-            self.create_magic("dark", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.create_magic("dark")
 
 
 
@@ -301,6 +306,10 @@ class Player(Entity):
             if curr_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
                 self.destroy_attack()
+
+        if self.doing_magic:
+            if curr_time - self.magic_time >= self.magic_cooldown:
+                self.doing_magic = False
 
         if not self.vulnerable:
             if curr_time - self.hurt_time >= self.vulnerability_duration:

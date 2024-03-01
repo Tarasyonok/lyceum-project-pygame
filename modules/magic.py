@@ -8,11 +8,12 @@ class Magic(pygame.sprite.Sprite):
 	def __init__(self, magic_type, pos, groups):
 		super().__init__(groups)
 		self.magic_type = magic_type
+		self.attack_type = magic_type
 		self.image = self.resize_image(pygame.image.load(fixpath(f"assets/images/magic/{magic_type}/alpha.png")).convert_alpha())
 		self.rect = self.image.get_rect(center=pos)
 
 		self.animation_speed = 0.2
-		self.animation_index = -7
+		self.animation_index = 0#-7
 
 		self.animation = []
 

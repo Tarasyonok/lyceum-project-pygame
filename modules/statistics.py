@@ -19,8 +19,8 @@ class Statistics:
         width = self.display_surface.get_width()
         height = self.display_surface.get_height()
 
-        self.normal_color = pygame.color.Color((255, 255, 255))
-        self.hover_color = pygame.color.Color((210, 210, 210))
+        self.deaths_color = pygame.color.Color((250, 50, 50))
+        self.kills_color = pygame.color.Color((255, 255, 255))
         self.active_color = pygame.color.Color((150, 50, 50))
 
         # buttons
@@ -34,15 +34,19 @@ class Statistics:
         """
         ).fetchone()
 
-        self.kills_text = self.font.render("KILLS: " + str(kills), True, self.normal_color)
+        self.kills_text = self.font.render("KILLS: " + str(kills), True, self.kills_color)
         self.kills_text_rect = self.kills_text.get_rect(
-            center=(width * 0.5, height * 0.4)
+            center=(width * 0.5, height * 0.6)
         )
 
-        self.deaths_text = self.font.render("DEATHS: " + str(deaths), True, self.normal_color)
+        self.deaths_text = self.font.render("DEATHS: " + str(deaths), True, self.deaths_color)
         self.deaths_text_rect = self.deaths_text.get_rect(
-            center=(width * 0.5, height * 0.5)
+            center=(width * 0.5, height * 0.7)
         )
+
+        self.you_win = self.logo_text = pygame.image.load(fixpath("assets/images/you_win.png")).convert_alpha()
+        self.you_win_rect = self.you_win.get_rect(center=(width * 0.5, height * 0.3))
+
         cur = con.cursor()
         cur.execute(
             f"""
@@ -76,3 +80,4 @@ class Statistics:
         # self.display_surface.blit(self.kills_num_text, self.kills_num_text_rect)
         self.display_surface.blit(self.deaths_text, self.deaths_text_rect)
         # self.display_surface.blit(self.deaths_num_text, self.deaths_num_text_rect)
+        self.display_surface.blit(self.you_win, self.you_win_rect)
