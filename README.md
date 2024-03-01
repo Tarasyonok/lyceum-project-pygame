@@ -2,15 +2,7 @@
 
 ##  О проекте  ##
 Игра в жанре RPG на сделанная на питоне с использованием библиотеки Pygame. Данные хранятся в базе данных sqlite3. Уровни сделаны в программе Tiled.
-("Kingdom of Elfrieden is the largest in the world.", 2000),
-            ("All energy people use is extracting from magical crystals.", 2000),
-            ("A lot of magical crystals quarried in the dungeon Aincrad.", 2000),
-            ("One day a lot of miners didn't came back from the dungeon.", 2000),
-            ("The survivors said, that they was murdered by monsters.", 2000),
-            ("No one knew where these creatures came from", 2000),
-            ("and none were prepared for there attack.", 2000),
-            ("The King is sending you as the strongest warrior to the dungeon.", 2000),
-            ("You must kill all monsters!", 2000),
+
 ## Предистория ##
 Королевство Ельфриден самое большое в мире людей.
 Магическая энергия, которая используется людьми добывается в подземелье Аинкард.
