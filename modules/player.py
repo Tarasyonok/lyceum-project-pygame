@@ -212,10 +212,13 @@ class Player(Entity):
             self.create_attack("sword")
             # attack
 
+        # self.doing_magic = True
+        # self.magic_time = pygame.time.get_ticks()
+        # self.create_magic("heal", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+
         if keys[pygame.K_1]:
-            self.doing_magic = True
-            self.magic_time = pygame.time.get_ticks()
-            self.create_magic("heal", magic_data["heal"]["strength"], magic_data["heal"]["cost"])
+            self.casting_spell = True
+            self.curr_magic = "heal"
 
         if keys[pygame.K_2]:
             self.doing_magic = True

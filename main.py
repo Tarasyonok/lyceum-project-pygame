@@ -62,12 +62,18 @@ class Game:
         self.set_cursor()
 
     def set_cursor(self):
-        pygame.mouse.set_visible(False)
+        # pygame.mouse.set_visible(False)
         self.normal_cursor = pygame.image.load(
             fixpath("assets/images/cursor/normal.png")
         ).convert_alpha()
         self.active_cursor = pygame.image.load(
             fixpath("assets/images/cursor/active.png")
+        ).convert_alpha()
+        self.normal_cursor = pygame.image.load(
+            fixpath("assets/images/cursor/game_normal.png")
+        ).convert_alpha()
+        self.active_cursor = pygame.image.load(
+            fixpath("assets/images/cursor/game_active.png")
         ).convert_alpha()
         self.cursor = self.normal_cursor
         self.cursor_rect = None
@@ -179,9 +185,11 @@ class Game:
                         self.cursor_rect = None
                     else:
                         self.cursor_rect = self.cursor.get_rect(topleft=(event.pos))
+                        self.cursor_rect = self.cursor.get_rect(center=(event.pos))
                     if self.status == "mainmenu":
                         self.main_menu.mouse_hover(event.pos)
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    print(event.pos)
                     if self.status == "opening":
                         continue
                     if event.button == 1 and self.show_cursor:
@@ -196,7 +204,8 @@ class Game:
                         if self.mouse_check(self.curr_level.back_to_game_rect, event.pos):
                             self.curr_level.show_pause_menu = False
                             self.curr_level.player.block_keybord = False
-                            self.show_cursor = False
+                            # self.show_cursor = False
+                            self.cursor = self.normal_cursor
                         elif self.mouse_check(self.curr_level.return_to_menu_rect, event.pos):
                             kills = self.curr_level.can_kill - len(self.curr_level.attackable_sprites)
                             self.save_game(
