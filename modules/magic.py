@@ -7,7 +7,8 @@ from random import randint
 class Magic(pygame.sprite.Sprite):
 	def __init__(self, magic_type, pos, groups):
 		super().__init__(groups)
-		self.image = pygame.image.load(fixpath(f"assets/images/magic/{magic_type}/alpha.png")).convert_alpha()
+		self.magic_type = magic_type
+		self.image = self.resize_image(pygame.image.load(fixpath(f"assets/images/magic/{magic_type}/alpha.png")).convert_alpha())
 		self.rect = self.image.get_rect(center=pos)
 
 		self.animation_speed = 0.2
@@ -16,9 +17,24 @@ class Magic(pygame.sprite.Sprite):
 		self.animation = []
 
 		for i in range(len(next(os.walk(fixpath(f'assets/images/magic/{magic_type}')))[2]) - 1):
-			self.animation.append(pygame.image.load(fixpath(f"assets/images/magic/{magic_type}/{i}.png")))
+			self.animation.append(self.resize_image(pygame.image.load(fixpath(f"assets/images/magic/{magic_type}/{i}.png"))))
 
 		print(len(self.animation))
+
+	def resize_image(self, image):
+		if self.magic_type == "heal":
+			return image
+		if self.magic_type == "earth":
+			return pygame.transform.scale2x(image)
+		if self.magic_type == "ice":
+			return pygame.transform.scale2x(image)
+		if self.magic_type == "fire":
+			return pygame.transform.scale2x(image)
+		if self.magic_type == "lightning":
+			return pygame.transform.scale_by(image, 1.5)
+		if self.magic_type == "dark":
+			return pygame.transform.scale2x(image)
+
 
 
 	def animate(self):
