@@ -155,24 +155,28 @@ class Level:
             self.current_attack.kill()
         self.current_attack = None
 
-    def create_magic(self, style, strength, cost):
+    def create_magic(self, style, strength, cost, pos):
+        x_pl, y_pl = self.player.rect.center
+        width, height = self.display_surface.get_size()
+
+        magic_pos = (pos[0] + x_pl - (width// 2), pos[1] + y_pl - (height // 2))
         if style == 'heal':
-            Magic("heal", self.player.rect.center, [self.visible_sprites])
+            Magic("heal", magic_pos, [self.visible_sprites])
 
         elif style == 'earth':
-            Magic("earth", self.player.rect.center, [self.visible_sprites])
+            Magic("earth", magic_pos, [self.visible_sprites])
 
         elif style == 'ice':
-            Magic("ice", self.player.rect.center, [self.visible_sprites])
+            Magic("ice", magic_pos, [self.visible_sprites])
 
         elif style == 'fire':
-            Magic("fire", self.player.rect.center, [self.visible_sprites])
+            Magic("fire", magic_pos, [self.visible_sprites])
 
         elif style == 'lightning':
-            Magic("lightning", self.player.rect.center, [self.visible_sprites])
+            Magic("lightning", magic_pos, [self.visible_sprites])
 
         elif style == 'dark':
-            Magic("dark", self.player.rect.center, [self.visible_sprites])
+            Magic("dark", magic_pos, [self.visible_sprites])
 
         # if style == 'flame':
         #     self.magic_player.flame(self.player, cost, [self.visible_sprites, self.attack_sprites])
