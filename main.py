@@ -325,7 +325,7 @@ class Game:
                     else:
                         self.curr_level = Level(*self.levels[self.level_index])
 
-                    if self.level_index == len(self.levels) - 1:
+                    if self.level_index == len(self.levels) - 1 and self.curr_sound != self.boss_level_sound:
                         self.curr_sound.stop()
                         self.curr_sound = self.boss_level_sound
                         self.curr_sound.play(loops=-1)
